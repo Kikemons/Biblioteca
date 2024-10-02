@@ -1,4 +1,3 @@
-
 package Ventanas;
 
 import Clases.Conexion;
@@ -8,9 +7,10 @@ import java.awt.Toolkit;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-
 public class EstadoLibro extends javax.swing.JFrame {
-    public static int id_libro=0;
+
+    public static int id_libro = 0;
+    String estadoLibroBase;
 
     public EstadoLibro() {
         initComponents();
@@ -19,25 +19,18 @@ public class EstadoLibro extends javax.swing.JFrame {
         setResizable(false);
         setSize(688, 491);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        id_libro=BuscarLibro.id_libro;
-        
-        
-        System.out.println(id_libro);
-        
-        
-        
-       ImageIcon wallpaper= new ImageIcon("src/Imagenes/fondo.jpg");
-       Icon fondo= new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
-               jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-       jLabel_wallpaper.setIcon(fondo);
-       this.repaint();
-       
-       
-       
+        id_libro = BuscarLibro.id_libro;
+
+        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
+        Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
+                jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+        jLabel_wallpaper.setIcon(fondo);
+        this.repaint();
+
         try {
             try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst=cn.prepareStatement("select * from Libro where id="+id_libro);
-                ResultSet rs=pst.executeQuery();
+                PreparedStatement pst = cn.prepareStatement("select * from libro where id=" + id_libro);
+                ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
                     txt_nombre.setText(rs.getString("Nombre"));
                     txt_autor.setText(rs.getString("Autor"));
@@ -45,22 +38,26 @@ public class EstadoLibro extends javax.swing.JFrame {
                     txt_id.setText(rs.getString("id"));
                     txt_categoria.setText(rs.getString("Categoria"));
                     cmb_estado.setSelectedItem(rs.getString("Estado"));
+                    estadoLibroBase = rs.getString("Estado");
+                }else{
+                    System.out.println("error al consultar");
                 }
+                    
+                cn.close();
             }
+
         } catch (SQLException e) {
-            System.err.println("error a la hora de consultar los datos del libro: "+e);
+            System.err.println("error a la hora de consultar los datos del libro: " + e);
         }
-       
-       
+
     }
-    
+
     @Override
-    public Image getIconImage(){
-        Image retValue=Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
         return retValue;
     }
 
-  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -156,22 +153,18 @@ public class EstadoLibro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
-        try {
-                Connection cn2= Conexion.conectar();
-                PreparedStatement pst2=cn2.prepareStatement("Update libro set Estado=? where id="+id_libro);
-                pst2.setString(1, cmb_estado.getSelectedItem().toString());
-                pst2.executeUpdate();
-                this.dispose();
-                
-    
-        } catch (SQLException e) {
-            System.err.println("error al actualizar el estado del libro: "+e);
+//hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro
+        if (!estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
+            System.out.println("cmb"+cmb_estado.getSelectedItem().toString());
+            System.out.println("estado "+estadoLibroBase);
+            agregarUserLibro aUser = new agregarUserLibro();
+            aUser.setVisible(true);
+            dispose();
         }
-        
-        
+
+
     }//GEN-LAST:event_btt_actualizarActionPerformed
 
-  
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

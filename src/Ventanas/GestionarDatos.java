@@ -257,8 +257,8 @@ public class GestionarDatos extends javax.swing.JFrame {
 
                 if (fila_point > -1) {
                     id_libro = (int) model.getValueAt(fila_point, columna);
-                    EliminarLibro estadoLibro = new EliminarLibro();
-                    estadoLibro.setVisible(true);
+                    EliminarLibro eliminarLibro = new EliminarLibro();
+                        eliminarLibro.setVisible(true);
                     dispose();
                 }
             }

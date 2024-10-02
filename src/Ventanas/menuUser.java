@@ -2,45 +2,63 @@ package Ventanas;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-public class Menu extends javax.swing.JFrame {
+/**
+ *
+ * @author monsalve
+ */
+public class menuUser extends javax.swing.JFrame {
 
-    public Menu() {
-        setTitle("Biblioteca📚 - Menu");
-        setSize(543, 329);
+    public menuUser() {
+        initComponents();
+        //colocamos algunos valores para darle personalizacion a la ventana
+        setSize(555, 323);
+        //setDefaultCloseOperation(HIDE_ON_CLOSE);
+        setTitle("Biblioteca📚");
         setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        initComponents();
 
-        ImageIcon wallpáper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon icon = new ImageIcon(wallpáper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
-                jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jlabel_wallpaper.setIcon(icon);
-        this.repaint();
+        //colocamos imagen en el jLabel de fondo
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
+                    jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jlabel_wallpaper.setIcon(fondo);
+        }
+        
+        //colocamos la imagen de logo
+        
 
     }
 
-    @Override
-    public Image getIconImage() {
-        Image retvalue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retvalue;
-    }
-
+   @Override
+   public Image getIconImage(){
+       URL url=getClass().getResource("/Imagenes/icon.png");
+       if (url!=null) {
+          Image retvalue=Toolkit.getDefaultToolkit().getImage(url);
+          return retvalue;
+       }
+        return null;
+       
+       
+   }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         Jlabel_titulo = new javax.swing.JLabel();
-        jlabel_footer = new javax.swing.JLabel();
         btt_consulta = new javax.swing.JButton();
         btt_info = new javax.swing.JButton();
-        btt_libros = new javax.swing.JButton();
-        Jlabel_consulta = new javax.swing.JLabel();
         jlabel_info = new javax.swing.JLabel();
+        Jlabel_consulta = new javax.swing.JLabel();
+        jlabel_footer = new javax.swing.JLabel();
         jlabel_baseD = new javax.swing.JLabel();
+        btt_libros = new javax.swing.JButton();
         jlabel_wallpaper = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -52,11 +70,6 @@ public class Menu extends javax.swing.JFrame {
         Jlabel_titulo.setForeground(new java.awt.Color(0, 0, 0));
         Jlabel_titulo.setText("Biblioteca Virtual Fray Ignacio Mariño");
         getContentPane().add(Jlabel_titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 455, 52));
-
-        jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
-        jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));
-        jlabel_footer.setText("Creado por Enrique Monsalve Ing ");
-        getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, -1, 23));
 
         btt_consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/consulta.png"))); // NOI18N
         btt_consulta.setBorder(null);
@@ -76,7 +89,27 @@ public class Menu extends javax.swing.JFrame {
         });
         getContentPane().add(btt_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 80, 140, 140));
 
-        btt_libros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/descargar.png"))); // NOI18N
+        jlabel_info.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jlabel_info.setForeground(new java.awt.Color(255, 255, 255));
+        jlabel_info.setText("Informacion");
+        getContentPane().add(jlabel_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 230, -1, -1));
+
+        Jlabel_consulta.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        Jlabel_consulta.setForeground(new java.awt.Color(255, 255, 255));
+        Jlabel_consulta.setText("Consulta");
+        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 230, -1, -1));
+
+        jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
+        jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));
+        jlabel_footer.setText("Creado por Enrique Monsalve Ing ");
+        getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, -1, 23));
+
+        jlabel_baseD.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jlabel_baseD.setForeground(new java.awt.Color(255, 255, 255));
+        jlabel_baseD.setText("Gestionar Datos");
+        getContentPane().add(jlabel_baseD, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
+
+        btt_libros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/aggUser.png"))); // NOI18N
         btt_libros.setBorder(null);
         btt_libros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,40 +117,25 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btt_libros, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 140, 140));
-
-        Jlabel_consulta.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        Jlabel_consulta.setForeground(new java.awt.Color(255, 255, 255));
-        Jlabel_consulta.setText("Consulta");
-        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 230, -1, -1));
-
-        jlabel_info.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jlabel_info.setForeground(new java.awt.Color(255, 255, 255));
-        jlabel_info.setText("Informacion");
-        getContentPane().add(jlabel_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 230, -1, -1));
-
-        jlabel_baseD.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jlabel_baseD.setForeground(new java.awt.Color(255, 255, 255));
-        jlabel_baseD.setText("Gestionar Datos");
-        getContentPane().add(jlabel_baseD, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
         getContentPane().add(jlabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 310));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btt_librosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_librosActionPerformed
-        GestionarDatos gestionarDatos= new GestionarDatos();
-        gestionarDatos.setVisible(true);
-    }//GEN-LAST:event_btt_librosActionPerformed
-
     private void btt_consultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_consultaActionPerformed
-        GestionarDatos gestionarDatos= new GestionarDatos();
-        gestionarDatos.setVisible(true);
+        BuscarLibro buscarLibro = new BuscarLibro();
+        buscarLibro.setVisible(true);
     }//GEN-LAST:event_btt_consultaActionPerformed
 
     private void btt_infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_infoActionPerformed
-       Info info= new Info();
-       info.setVisible(true);
+        Info info = new Info();
+        info.setVisible(true);
     }//GEN-LAST:event_btt_infoActionPerformed
+
+    private void btt_librosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_librosActionPerformed
+        BuscarLibro buscarLibro= new BuscarLibro();
+        buscarLibro.setVisible(true);
+    }//GEN-LAST:event_btt_librosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,20 +154,23 @@ public class Menu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(menuUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Menu().setVisible(true);
+                new menuUser().setVisible(true);
             }
         });
     }

@@ -12,10 +12,11 @@ import javax.swing.JOptionPane;
 
 public class EliminarLibro extends javax.swing.JFrame {
     public static int id_libro=0;
+    String estadoLibroBase;
 
     public EliminarLibro() {
         initComponents();
-        setTitle("Biblioteca📚 - Eliminar Libro");
+        setTitle("Biblioteca📚 - Estado del Libro");
         setLocationRelativeTo(null);
         setResizable(false);
         setSize(688, 491);
@@ -43,6 +44,7 @@ public class EliminarLibro extends javax.swing.JFrame {
                     txt_id.setText(rs.getString("id"));
                     txt_categoria.setText(rs.getString("Categoria"));
                     cmb_estado.setSelectedItem(rs.getString("Estado"));
+                    estadoLibroBase = rs.getString("Estado");
                 }
             }
         } catch (SQLException e) {
@@ -78,6 +80,7 @@ public class EliminarLibro extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         txt_id = new javax.swing.JTextField();
         btt_eliminar = new javax.swing.JButton();
+        btt_actualizar = new javax.swing.JButton();
         jLabel_wallpaper = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -147,7 +150,16 @@ public class EliminarLibro extends javax.swing.JFrame {
                 btt_eliminarActionPerformed(evt);
             }
         });
-        getContentPane().add(btt_eliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 320, 120, 40));
+        getContentPane().add(btt_eliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 380, 120, 40));
+
+        btt_actualizar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btt_actualizar.setText("Actualizar");
+        btt_actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btt_actualizarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btt_actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 320, 100, 40));
         getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, 470));
 
         pack();
@@ -171,6 +183,16 @@ public class EliminarLibro extends javax.swing.JFrame {
         
 
     }//GEN-LAST:event_btt_eliminarActionPerformed
+
+    private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
+        //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro
+        if (!estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
+            agregarUserLibro aUser = new agregarUserLibro();
+            aUser.setVisible(true);
+            this.dispose();
+        }
+
+    }//GEN-LAST:event_btt_actualizarActionPerformed
 
   
     public static void main(String args[]) {
@@ -238,6 +260,7 @@ public class EliminarLibro extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Jlabel_titulo;
+    private javax.swing.JButton btt_actualizar;
     private javax.swing.JButton btt_eliminar;
     private javax.swing.JComboBox<String> cmb_estado;
     private javax.swing.JLabel jLabel1;

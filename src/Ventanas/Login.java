@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Ventanas;
 
 import Clases.Conexion;
+import java.awt.Color;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -20,7 +16,7 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
 
     public static String user;
-    String pass;
+    boolean valido;
 
     public Login() {
         initComponents();
@@ -42,14 +38,32 @@ public class Login extends javax.swing.JFrame {
         jlabel_wallpaper.setIcon(Icon);
         this.repaint();
 
-        
-        
     }
 
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
         return retValue;
+    }
+
+    //metodo para validar que los campos esten con informacion
+    public void validarText() {
+
+        valido = true;
+
+        if (txt_user.getText().trim().equals("")) {
+            txt_user.setBackground(Color.red);
+            valido = false;
+        }
+        if (txt_password.getText().trim().equals("")) {
+            txt_password.setBackground(Color.red);
+            valido = false;
+        }
+        if (valido == false) {
+            JOptionPane.showMessageDialog(null, "Complete todos los campos");
+            txt_password.setBackground(Color.WHITE);
+            txt_user.setBackground(Color.WHITE);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -115,34 +129,47 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_passwordActionPerformed
 
     private void btt_ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_ingresarActionPerformed
-        user = txt_user.getText().trim();
-        pass = txt_password.getText().trim();
-
-        if (!user.equals("") & (!pass.equals(""))) {
+        //utilizamos el metodo para verificar los datos
+        validarText();
+        
+        if (valido == true) {
             try {
-
-                Connection cn = Conexion.conectar();
-                PreparedStatement pst = cn.prepareStatement("select * from  usuario where user = '" + user + "'"
-                        + " and password ='"+pass+"'");
-
-                ResultSet rs = pst.executeQuery();
-                if (rs.next()) {
-                    Menu menu= new Menu();
-                    dispose();
-                    menu.setVisible(rootPaneCheckingEnabled);
+                //hacemos la consulta del estado del usuario para redirigirlo a la interfaz que corresponde
+                String user = txt_user.getText().trim();
+                String pass = txt_password.getText().trim();
+                try (Connection cn = Conexion.conectar()) {
+                    PreparedStatement pst = cn.prepareStatement("select estatus from useradmin where user=? and password=?");
+                    pst.setString(1, user);
+                    pst.setString(2, pass);
+                    ResultSet rs = pst.executeQuery();
                     
-
-                } else {
-                    txt_password.setText("");
-                    txt_user.setText("");
-                    JOptionPane.showMessageDialog(null, "Usuario invalido, Intente nuevamente");
+                    if (rs.next()) {
+                       String  estatus = rs.getString("estatus");
+                        
+                        switch (estatus) {
+                            case "admin" -> {
+                                Menu menu = new Menu();
+                                menu.setVisible(true);
+                                dispose();
+                            }
+                            case "user" -> {
+                                menuUser meUser = new menuUser();
+                                meUser.setVisible(true);
+                                dispose();
+                            }
+                        }
+                        
+                    } else {
+                        txt_password.setText("");
+                        txt_user.setText("");
+                        JOptionPane.showMessageDialog(null, "Usuario invalido, Intente nuevamente");
+                    }
                 }
 
             } catch (SQLException e) {
                 System.err.println("error al consultar el usuario: " + e);
             }
         }
-
     }//GEN-LAST:event_btt_ingresarActionPerformed
 
     /**
