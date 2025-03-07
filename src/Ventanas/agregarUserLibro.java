@@ -49,12 +49,32 @@ public class agregarUserLibro extends javax.swing.JFrame {
                     txt_autor.setText(rs.getString("autor"));
                     txt_categoria.setText(rs.getString("categoria"));
                     cmb_estado.setSelectedItem(rs.getString("estado"));
+                    cn.close();
                 }
             }
 
         } catch (SQLException e) {
             System.out.println("error " + e);
             JOptionPane.showMessageDialog(null, "Error al consultar los datos del libro!");
+        }
+        try{
+            try(Connection cn2= Conexion.conectar()){
+                PreparedStatement pst2= cn2.prepareCall("select * from usuario where IdLibro=?");
+                pst2.setInt(1, id_libro);
+                ResultSet rs=pst2.executeQuery();
+                if (rs.next()) {
+                    txt_Identidad.setText(rs.getString("Identidad"));
+                    txt_Telefono.setText(rs.getString("Telefono"));
+                    txt_apellido.setText(rs.getString("Apellidos"));
+                    txt_observaciones.setText(rs.getString("Observacion"));
+                    txt_nombre.setText(rs.getString("Nombres"));
+                    
+                    cn2.close();
+                }
+            }
+        }catch(SQLException e){
+            System.err.println("Error al consultar los datos del usuario! +e");
+            JOptionPane.showMessageDialog(null, "Error al consultar los datos del usuario! " +e);
         }
 
     }
@@ -246,7 +266,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
         //inplementamos el metodo de verificar los txtFile
         VerificarTextFile();
         //creamos la consulta consulta para verificar que el usuario no este registrado
-        if (valido==true) {
+        if (valido) {
             try {
                 try (Connection cn = Conexion.conectar()) {
                     PreparedStatement pst = cn.prepareStatement("select * from usuario where identidad=?");
@@ -255,9 +275,10 @@ public class agregarUserLibro extends javax.swing.JFrame {
                     if (rs.next()) {
                         txt_Identidad.setText(rs.getString("Identidad"));
                         txt_Telefono.setText(rs.getString("Telefono"));
-                        txt_apellido.setText(rs.getString("Apellido"));
-                        txt_nombre.setText(rs.getString("Nombre"));
+                        txt_apellido.setText(rs.getString("Apellidos"));
+                        txt_nombre.setText(rs.getString("Nombres"));
                         txt_observaciones.setText(rs.getString("Observacion"));
+                
                     }
 
                     //hacemos el ingreso del nuevo usuario
@@ -280,23 +301,20 @@ public class agregarUserLibro extends javax.swing.JFrame {
                         } catch (SQLException e) {
                             System.err.println("error al ingresar el usuario a la base de datos " +e);
                         }
-                        cn.close();
-                    } else {
-                        //EN ESTE CASO SOLO CAMBIAMOS EL ESTADO DEL LIBRO LLENANDO LOS TXTFILE DE USUARIO CON EL USUARIO 
-                        // YA REGISTRADO
-
-                    }
+                    } 
                 }
             } catch (SQLException e) {
                 System.err.println("error a la hora de consultar los datos el id del usuario " + e);
             }
             
             dispose();
-            if (UserReg==true) {
+            if (UserReg) {
                 try {
                     Connection conexion= Conexion.conectar();
-                    PreparedStatement preparedStatement= conexion.prepareStatement("update libro set Estado=? where Id="+id_libro);
+                    PreparedStatement preparedStatement= conexion.prepareStatement("update libro set Estado=?, Observacion=? where Id=?");
                     preparedStatement.setString(1, cmb_estado.getSelectedItem().toString());
+                    preparedStatement.setString(2, txt_observaciones.getText().toString());
+                    preparedStatement.setInt(3,id_libro);
                     preparedStatement.executeUpdate();
                     
                     
