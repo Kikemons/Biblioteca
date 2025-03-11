@@ -71,7 +71,7 @@ public class menuUser extends javax.swing.JFrame {
         Jlabel_titulo.setText("Biblioteca Virtual Fray Ignacio Mariño");
         getContentPane().add(Jlabel_titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 455, 52));
 
-        btt_consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/consulta.png"))); // NOI18N
+        btt_consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/aggUser.png"))); // NOI18N
         btt_consulta.setBorder(null);
         btt_consulta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,8 +96,8 @@ public class menuUser extends javax.swing.JFrame {
 
         Jlabel_consulta.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         Jlabel_consulta.setForeground(new java.awt.Color(255, 255, 255));
-        Jlabel_consulta.setText("Consulta");
-        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 230, -1, -1));
+        Jlabel_consulta.setText("Agregar Usuario");
+        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, -1, -1));
 
         jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));
@@ -109,7 +109,7 @@ public class menuUser extends javax.swing.JFrame {
         jlabel_baseD.setText("Gestionar Datos");
         getContentPane().add(jlabel_baseD, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
 
-        btt_libros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/aggUser.png"))); // NOI18N
+        btt_libros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/consulta.png"))); // NOI18N
         btt_libros.setBorder(null);
         btt_libros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,8 +123,7 @@ public class menuUser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_consultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_consultaActionPerformed
-        BuscarLibro buscarLibro = new BuscarLibro();
-        buscarLibro.setVisible(true);
+        
     }//GEN-LAST:event_btt_consultaActionPerformed
 
     private void btt_infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_infoActionPerformed

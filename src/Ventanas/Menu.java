@@ -58,7 +58,7 @@ public class Menu extends javax.swing.JFrame {
         jlabel_footer.setText("Creado por Enrique Monsalve Ing ");
         getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, -1, 23));
 
-        btt_consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/consulta.png"))); // NOI18N
+        btt_consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/aggUser.png"))); // NOI18N
         btt_consulta.setBorder(null);
         btt_consulta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,8 +87,8 @@ public class Menu extends javax.swing.JFrame {
 
         Jlabel_consulta.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         Jlabel_consulta.setForeground(new java.awt.Color(255, 255, 255));
-        Jlabel_consulta.setText("Consulta");
-        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 230, -1, -1));
+        Jlabel_consulta.setText("Agregar usuarios");
+        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, -1, -1));
 
         jlabel_info.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jlabel_info.setForeground(new java.awt.Color(255, 255, 255));
@@ -110,8 +110,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_btt_librosActionPerformed
 
     private void btt_consultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_consultaActionPerformed
-        GestionarDatos gestionarDatos= new GestionarDatos();
-        gestionarDatos.setVisible(true);
+        
     }//GEN-LAST:event_btt_consultaActionPerformed
 
     private void btt_infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_infoActionPerformed

@@ -10,26 +10,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-public class agregarUserLibro extends javax.swing.JFrame {
+public class AgregarUsuario extends javax.swing.JFrame {
 
-    public static int id_libro;
     boolean valido;
-    String identidad="";
-    String estadoLibro;
+    String identidad = "";
 
-    public agregarUserLibro() {
+    public AgregarUsuario() {
         initComponents();
-        setTitle("Biblioteca📚 - Agregar usuario relacionado con Libro");
+        setTitle("Biblioteca📚 - Agregar usuario");
         setLocationRelativeTo(null);
         setResizable(false);
         setResizable(false);
-        setSize(939, 518);
+        setSize(714, 519);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        id_libro = BuscarLibro.id_libro;
-        id_libro = GestionarDatos.id_libro;
-        estadoLibro=EliminarLibro.estadoLibro;
-        
-        
 
         ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
         Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
@@ -41,33 +34,13 @@ public class agregarUserLibro extends javax.swing.JFrame {
         jScrollPane2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-        //hacemos una consulta para buscar los datos del libro
-        try {
-            try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst = cn.prepareStatement("select * from Libro where id=?");
-                pst.setString(1, Integer.toString(id_libro));
-                ResultSet rs = pst.executeQuery();
-                if (rs.next()) {
-                    txt_id.setText(rs.getString("id"));
-                    txt_nombreLibro.setText(rs.getString("nombre"));
-                    txt_autor.setText(rs.getString("autor"));
-                    txt_categoria.setText(rs.getString("categoria"));
-                    cmb_estado.setSelectedItem(estadoLibro);
-                    cn.close();
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println("error " + e);
-            JOptionPane.showMessageDialog(null, "Error al consultar los datos del libro!");
-        }
+            // pendiente para la consulta del usuario
         try {
             try (Connection cn2 = Conexion.conectar()) {
-                PreparedStatement pst2 = cn2.prepareCall("select * from usuario where IdLibro=?");
-                pst2.setInt(1, id_libro);
+                PreparedStatement pst2 = cn2.prepareCall("select * from usuario where Identidad=?");
+                pst2.setString(1, txt_Identidad.getText());
                 ResultSet rs = pst2.executeQuery();
                 if (rs.next()) {
-                    txt_Identidad.setText(rs.getString("Identidad"));
                     txt_Telefono.setText(rs.getString("Telefono"));
                     txt_apellido.setText(rs.getString("Apellidos"));
                     txt_observaciones.setText(rs.getString("Observacion"));
@@ -112,7 +85,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
             txt_apellido.setText("");
             valido = false;
         }
-        if (!valido ) {
+        if (!valido) {
             System.out.println("debe mostrar el jop");
             JOptionPane.showMessageDialog(null, "complete todos los campos para poder"
                     + " registrar el usuario");
@@ -121,7 +94,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
             txt_apellido.setBackground(Color.WHITE);
             txt_Telefono.setBackground(Color.WHITE);
         }
-        identidad=txt_Identidad.getText().trim();
+        identidad = txt_Identidad.getText().trim();
     }
 
     @SuppressWarnings("unchecked")
@@ -141,17 +114,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
         btt_actualizar = new javax.swing.JButton();
         Jlabel_titulo1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txt_nombreLibro = new javax.swing.JTextField();
-        txt_autor = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        txt_categoria = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        txt_id = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        cmb_estado = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         txt_observaciones = new javax.swing.JTextArea();
         jLabel_wallpaper = new javax.swing.JLabel();
@@ -183,12 +146,12 @@ public class agregarUserLibro extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Guardar");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 440, -1, -1));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 440, -1, -1));
 
         jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setText("Creado por Enrique Monsalve Ing ");
-        getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 460, -1, 23));
+        getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 460, -1, 23));
         getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 278, 36));
         getContentPane().add(txt_apellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 278, 36));
         getContentPane().add(txt_Telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 278, 36));
@@ -201,7 +164,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
                 btt_actualizarActionPerformed(evt);
             }
         });
-        getContentPane().add(btt_actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 330, 130, 110));
+        getContentPane().add(btt_actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 330, 130, 110));
 
         Jlabel_titulo1.setBackground(new java.awt.Color(102, 102, 102));
         Jlabel_titulo1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
@@ -214,54 +177,16 @@ public class agregarUserLibro extends javax.swing.JFrame {
         jLabel6.setText("Identidad:");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel4.setText("Titulo del libro:");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, -1, -1));
-
-        txt_nombreLibro.setEditable(false);
-        getContentPane().add(txt_nombreLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 120, 278, 36));
-
-        txt_autor.setEditable(false);
-        getContentPane().add(txt_autor, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, 278, 36));
-
-        jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Autor:");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 190, -1, -1));
-
-        txt_categoria.setEditable(false);
-        getContentPane().add(txt_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 278, 36));
-
-        jLabel8.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Categoria:");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, -1, -1));
-
-        txt_id.setEditable(false);
-        getContentPane().add(txt_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 410, 87, 36));
-
-        jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Id Libro:");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 380, -1, -1));
-
-        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin prestar", "Prestado" }));
-        getContentPane().add(cmb_estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 40, 160, 36));
-
         jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel10.setText("Observaciones:");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 90, -1, -1));
-
-        jLabel11.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel11.setText("Estado:");
-        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 20, -1, -1));
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, -1, -1));
 
         txt_observaciones.setColumns(20);
         txt_observaciones.setRows(5);
         jScrollPane2.setViewportView(txt_observaciones);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 120, 190, 190));
-        getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 480));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 120, 190, 190));
+        getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 480));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -278,7 +203,6 @@ public class agregarUserLibro extends javax.swing.JFrame {
                     pst.setString(1, identidad);
                     ResultSet rs = pst.executeQuery();
 
-
                     //hacemos el ingreso del nuevo usuario
                     if (!rs.next()) {
                         try {
@@ -291,7 +215,6 @@ public class agregarUserLibro extends javax.swing.JFrame {
                                 pst2.setString(4, txt_Identidad.getText().trim());
                                 pst2.setString(5, txt_Telefono.getText().trim());
                                 pst2.setString(6, txt_observaciones.getText().trim());
-                                pst2.setInt(7, Integer.parseInt(txt_id.getText().trim()));
 
                                 pst2.executeUpdate();
                                 cn2.close();
@@ -308,34 +231,20 @@ public class agregarUserLibro extends javax.swing.JFrame {
             }
 
             dispose();
-            
-                try {
-                try (Connection conexion = Conexion.conectar()) {
-                    PreparedStatement preparedStatement = conexion.prepareStatement("update libro set Estado=?, Observacion=? where Id=?");
-                    preparedStatement.setString(1, cmb_estado.getSelectedItem().toString());
-                    preparedStatement.setString(2, txt_observaciones.getText());
-                    preparedStatement.setInt(3, id_libro);
-                    preparedStatement.executeUpdate();
-                }
-                } catch (SQLException e) {
-                    System.err.println("error al actualizar el estado del libro");
-                }
 
-                try {
-                    System.out.println(cmb_estado.getSelectedItem().toString());
-                    if (cmb_estado.getSelectedItem().toString().equals("Sin prestar")) {
-                        System.out.println("ingreso a cambiar ");
-                        Connection cn = Conexion.conectar();
-                        PreparedStatement pst = cn.prepareStatement("update usuario set Observacion=?, IdLibro=null where Identidad=?");
-                        pst.setString(1,"");
-                        pst.setString(2,identidad);
-                        pst.executeUpdate();
-                    }
-                } catch (SQLException e) {
-                    System.err.println("error a la hora de actualizar la observacion del usuario "+e);
-                }
-            }
-        
+//                try {
+//                    if (cmb_estado.getSelectedItem().toString().equals("Sin prestar")) {
+//                        System.out.println("ingreso a cambiar ");
+//                        Connection cn = Conexion.conectar();
+//                        PreparedStatement pst = cn.prepareStatement("update usuario set Observacion=?, IdLibro=null where Identidad=?");
+//                        pst.setString(1,"");
+//                        pst.setString(2,identidad);
+//                        pst.executeUpdate();
+//                    }
+//                } catch (SQLException e) {
+//                    System.err.println("error a la hora de actualizar la observacion del usuario "+e);
+//                }
+        }
 
 
     }//GEN-LAST:event_btt_actualizarActionPerformed
@@ -354,7 +263,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(agregarUserLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AgregarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -364,7 +273,15 @@ public class agregarUserLibro extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -376,7 +293,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new agregarUserLibro().setVisible(true);
+            new AgregarUsuario().setVisible(true);
         });
     }
 
@@ -384,29 +301,19 @@ public class agregarUserLibro extends javax.swing.JFrame {
     private javax.swing.JLabel Jlabel_titulo;
     private javax.swing.JLabel Jlabel_titulo1;
     private javax.swing.JButton btt_actualizar;
-    private javax.swing.JComboBox<String> cmb_estado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel_wallpaper;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel jlabel_footer;
     private javax.swing.JTextField txt_Identidad;
     private javax.swing.JTextField txt_Telefono;
     private javax.swing.JTextField txt_apellido;
-    private javax.swing.JTextField txt_autor;
-    private javax.swing.JTextField txt_categoria;
-    private javax.swing.JTextField txt_id;
     private javax.swing.JTextField txt_nombre;
-    private javax.swing.JTextField txt_nombreLibro;
     private javax.swing.JTextArea txt_observaciones;
     // End of variables declaration//GEN-END:variables
 }

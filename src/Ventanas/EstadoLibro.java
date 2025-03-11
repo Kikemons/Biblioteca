@@ -10,11 +10,12 @@ import javax.swing.ImageIcon;
 public class EstadoLibro extends javax.swing.JFrame {
 
     public static int id_libro = 0;
-    String estadoLibroBase;
+    public static String estadoLibroBase;
+    public static String estadoLibro;
 
     public EstadoLibro() {
         initComponents();
-        setTitle("Biblioteca📚 - Estado del Libro");
+        setTitle("Biblioteca📚 - Estado del Libro pruebaaa");
         setLocationRelativeTo(null);
         setResizable(false);
         setSize(688, 491);
@@ -154,9 +155,11 @@ public class EstadoLibro extends javax.swing.JFrame {
 
     private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
 //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro
-        if (!estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
+        if (estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
             System.out.println("cmb"+cmb_estado.getSelectedItem().toString());
+            estadoLibro=cmb_estado.getSelectedItem().toString();
             System.out.println("estado "+estadoLibroBase);
+            System.out.println("lluviaaa");
             agregarUserLibro aUser = new agregarUserLibro();
             aUser.setVisible(true);
             dispose();
@@ -191,10 +194,8 @@ public class EstadoLibro extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EstadoLibro().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new EstadoLibro().setVisible(true);
         });
     }
 

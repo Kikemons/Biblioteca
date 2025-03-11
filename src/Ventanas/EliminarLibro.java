@@ -1,4 +1,3 @@
-
 package Ventanas;
 
 import Clases.Conexion;
@@ -9,10 +8,11 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-
 public class EliminarLibro extends javax.swing.JFrame {
-    public static int id_libro=0;
+
+    public static int id_libro = 0;
     String estadoLibroBase;
+    public static String estadoLibro;
 
     public EliminarLibro() {
         initComponents();
@@ -21,22 +21,18 @@ public class EliminarLibro extends javax.swing.JFrame {
         setResizable(false);
         setSize(688, 491);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        id_libro=GestionarDatos.id_libro;
-        
-        
-        
-       ImageIcon wallpaper= new ImageIcon("src/Imagenes/fondo.jpg");
-       Icon fondo= new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
-               jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-       jLabel_wallpaper.setIcon(fondo);
-       this.repaint();
-       
-       
-       
+        id_libro = GestionarDatos.id_libro;
+
+        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
+        Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
+                jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+        jLabel_wallpaper.setIcon(fondo);
+        this.repaint();
+
         try {
             try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst=cn.prepareStatement("select * from Libro where id="+id_libro);
-                ResultSet rs=pst.executeQuery();
+                PreparedStatement pst = cn.prepareStatement("select * from Libro where id=" + id_libro);
+                ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
                     txt_nombre.setText(rs.getString("Nombre"));
                     txt_autor.setText(rs.getString("Autor"));
@@ -48,19 +44,17 @@ public class EliminarLibro extends javax.swing.JFrame {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("error a la hora de consultar los datos del libro: "+e);
+            System.err.println("error a la hora de consultar los datos del libro: " + e);
         }
-       
-       
+
     }
-    
+
     @Override
-    public Image getIconImage(){
-        Image retValue=Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
         return retValue;
     }
 
-  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -166,27 +160,28 @@ public class EliminarLibro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_eliminarActionPerformed
-       int seleccion=JOptionPane.showConfirmDialog(null, "Esta seguro que desea borrar un libro");
-       
-           if (seleccion==0) {
-             try {
-            Connection cn2= Conexion.conectar();
-            PreparedStatement pst2=cn2.prepareStatement("delete from Libro where id="+id_libro);
-            pst2.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "El libro fue eliminado exitosamente!");
-        } catch (SQLException e) {
-            System.err.println("error al borrar el libro: "+e);
+        int seleccion = JOptionPane.showConfirmDialog(null, "Esta seguro que desea borrar un libro");
+
+        if (seleccion == 0) {
+            try {
+                Connection cn2 = Conexion.conectar();
+                PreparedStatement pst2 = cn2.prepareStatement("delete from Libro where id=" + id_libro);
+                pst2.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "El libro fue eliminado exitosamente!");
+            } catch (SQLException e) {
+                System.err.println("error al borrar el libro: " + e);
+            }
+            dispose();
         }
-             dispose();
-           }
-        
+
 
     }//GEN-LAST:event_btt_eliminarActionPerformed
 
     private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
         //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro
         if (!estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
+            estadoLibro=cmb_estado.getSelectedItem().toString();
             agregarUserLibro aUser = new agregarUserLibro();
             aUser.setVisible(true);
             this.dispose();
@@ -194,7 +189,6 @@ public class EliminarLibro extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btt_actualizarActionPerformed
 
-  
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
