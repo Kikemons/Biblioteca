@@ -29,24 +29,21 @@ public class menuUser extends javax.swing.JFrame {
                     jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
             jlabel_wallpaper.setIcon(fondo);
         }
-        
+
         //colocamos la imagen de logo
-        
+    }
+
+    @Override
+    public Image getIconImage() {
+        URL url = getClass().getResource("/Imagenes/icon.png");
+        if (url != null) {
+            Image retvalue = Toolkit.getDefaultToolkit().getImage(url);
+            return retvalue;
+        }
+        return null;
 
     }
 
-   @Override
-   public Image getIconImage(){
-       URL url=getClass().getResource("/Imagenes/icon.png");
-       if (url!=null) {
-          Image retvalue=Toolkit.getDefaultToolkit().getImage(url);
-          return retvalue;
-       }
-        return null;
-       
-       
-   }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -123,7 +120,8 @@ public class menuUser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_consultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_consultaActionPerformed
-        
+        AgregarUsuario agg = new AgregarUsuario();
+        agg.setVisible(true);
     }//GEN-LAST:event_btt_consultaActionPerformed
 
     private void btt_infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_infoActionPerformed
@@ -132,7 +130,7 @@ public class menuUser extends javax.swing.JFrame {
     }//GEN-LAST:event_btt_infoActionPerformed
 
     private void btt_librosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_librosActionPerformed
-        BuscarLibro buscarLibro= new BuscarLibro();
+        BuscarLibro buscarLibro = new BuscarLibro();
         buscarLibro.setVisible(true);
     }//GEN-LAST:event_btt_librosActionPerformed
 

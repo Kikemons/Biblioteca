@@ -5,8 +5,11 @@ import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
@@ -31,11 +34,14 @@ public class GestionarDatos extends javax.swing.JFrame {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setSize(805, 516);
 
-        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon Icono = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
-                jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jlabel_wallpaper.setIcon(Icono);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon Icono = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
+                    jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jlabel_wallpaper.setIcon(Icono);
+            this.repaint();
+        }
 
         jTable_consulta = new JTable(model);
         jScrollPane_consulta.setViewportView(jTable_consulta);
@@ -73,14 +79,42 @@ public class GestionarDatos extends javax.swing.JFrame {
                 }
             }
         });
-        
-        
+
+        txt_nombre.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btt_buscar.doClick(); // Simula un clic en el botón
+                }
+            }
+        });
+
+        //agregamos el evento a la selecion de la tabla
+        jTable_consulta.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int fila_point = jTable_consulta.rowAtPoint(e.getPoint());
+                int columna = 0;
+
+                if (fila_point > -1) {
+                    id_libro = (int) model.getValueAt(fila_point, columna);
+                    EliminarLibro eliminarLibro = new EliminarLibro();
+                    eliminarLibro.setVisible(true);
+                    dispose();
+                }
+            }
+        });
+
     }
 
     @Override
     public Image getIconImage() {
-        Image retvalu = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retvalu;
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
+            return retValue;
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -92,7 +126,7 @@ public class GestionarDatos extends javax.swing.JFrame {
         jlabel_buscar = new javax.swing.JLabel();
         jScrollPane_consulta = new javax.swing.JScrollPane();
         jTable_consulta = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        btt_buscar = new javax.swing.JButton();
         jlabel_footer = new javax.swing.JLabel();
         cmb_buscar = new javax.swing.JComboBox<>();
         btt_agregarLibro = new javax.swing.JButton();
@@ -129,14 +163,14 @@ public class GestionarDatos extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 770, 300));
 
-        jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton1.setText("Buscar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btt_buscar.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btt_buscar.setText("Buscar");
+        btt_buscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btt_buscarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 80, 90, -1));
+        getContentPane().add(btt_buscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 80, 90, -1));
 
         jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));
@@ -167,10 +201,8 @@ public class GestionarDatos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btt_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_buscarActionPerformed
         // TODO add your handling code here:
-        
-    
 
         model.setRowCount(0);
         String texto = txt_nombre.getText().trim();
@@ -248,32 +280,16 @@ public class GestionarDatos extends javax.swing.JFrame {
             }
         }
 
-        //agregamos el evento a la selecion de la tabla
-        jTable_consulta.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int fila_point = jTable_consulta.rowAtPoint(e.getPoint());
-                int columna = 0;
-
-                if (fila_point > -1) {
-                    id_libro = (int) model.getValueAt(fila_point, columna);
-                    EliminarLibro eliminarLibro = new EliminarLibro();
-                        eliminarLibro.setVisible(true);
-                    dispose();
-                }
-            }
-        });
-    
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btt_buscarActionPerformed
 
     private void cmb_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_buscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmb_buscarActionPerformed
 
     private void btt_agregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_agregarLibroActionPerformed
-       AgregarLibro agregarLibro= new AgregarLibro();
-       agregarLibro.setVisible(true);
-       dispose();
+        AgregarLibro agregarLibro = new AgregarLibro();
+        agregarLibro.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btt_agregarLibroActionPerformed
 
     /**
@@ -291,27 +307,23 @@ public class GestionarDatos extends javax.swing.JFrame {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
 
-}
+                }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GestionarDatos.class  
+            java.util.logging.Logger.getLogger(GestionarDatos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(GestionarDatos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-} catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GestionarDatos.class  
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(GestionarDatos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-} catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GestionarDatos.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GestionarDatos.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(GestionarDatos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -341,8 +353,8 @@ public class GestionarDatos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Jlabel_titulo;
     private javax.swing.JButton btt_agregarLibro;
+    private javax.swing.JButton btt_buscar;
     private javax.swing.JComboBox<String> cmb_buscar;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane_consulta;
     private javax.swing.JTable jTable_consulta;
@@ -352,5 +364,4 @@ public class GestionarDatos extends javax.swing.JFrame {
     private javax.swing.JTextField txt_nombre;
     // End of variables declaration//GEN-END:variables
 
-  
 }

@@ -4,6 +4,7 @@ import Clases.Conexion;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -16,18 +17,21 @@ public class EliminarLibro extends javax.swing.JFrame {
 
     public EliminarLibro() {
         initComponents();
-        setTitle("Biblioteca📚 - Estado del Libro");
+        setTitle("Biblioteca📚 - Estado del Libro admin");
         setLocationRelativeTo(null);
         setResizable(false);
         setSize(688, 491);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         id_libro = GestionarDatos.id_libro;
 
-        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
-                jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jLabel_wallpaper.setIcon(fondo);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
+                    jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jLabel_wallpaper.setIcon(fondo);
+            this.repaint();
+        }
 
         try {
             try (Connection cn = Conexion.conectar()) {
@@ -49,10 +53,14 @@ public class EliminarLibro extends javax.swing.JFrame {
 
     }
 
-    @Override
+      @Override
     public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retValue;
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
+            return retValue;
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -172,7 +180,7 @@ public class EliminarLibro extends javax.swing.JFrame {
             } catch (SQLException e) {
                 System.err.println("error al borrar el libro: " + e);
             }
-            dispose();
+            this.dispose();
         }
 
 

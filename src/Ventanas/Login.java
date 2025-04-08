@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -26,24 +29,43 @@ public class Login extends javax.swing.JFrame {
         setTitle("Biblioteca📚 - Login");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        ImageIcon wallpaperLogo = new ImageIcon("src/Imagenes/logoAlcaldia.png");
-        Icon icono = new ImageIcon(wallpaperLogo.getImage().getScaledInstance(jlabel_imagen.getWidth(),
-                jlabel_imagen.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jlabel_imagen.setIcon(icono);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/logoAlcaldia.png");
+        if (url != null) {
+            ImageIcon wallpaperLogo = new ImageIcon(url);
+            Icon icono = new ImageIcon(wallpaperLogo.getImage().getScaledInstance(jlabel_imagen.getWidth(),
+                    jlabel_imagen.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jlabel_imagen.setIcon(icono);
+            this.repaint();
+        }
 
-        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon Icon = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
-                jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jlabel_wallpaper.setIcon(Icon);
-        this.repaint();
+        URL url2 = getClass().getResource("/Imagenes/fondo.jpg");
+        ImageIcon wallpaper = new ImageIcon(url2);
+        if (url2 != null) {
+            Icon Icon = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
+                    jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jlabel_wallpaper.setIcon(Icon);
+            this.repaint();
+        }
+
+        txt_password.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btt_ingresar.doClick(); // Simula un clic en el botón
+                }
+            }
+        });
 
     }
 
     @Override
     public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retValue;
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
+            return retValue;
+        }
+        return null;
     }
 
     //metodo para validar que los campos esten con informacion
@@ -63,6 +85,48 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Complete todos los campos");
             txt_password.setBackground(Color.WHITE);
             txt_user.setBackground(Color.WHITE);
+        }
+    }
+
+    private void ingresar() {
+        validarText();
+        if (valido == true) {
+            try {
+                //hacemos la consulta del estado del usuario para redirigirlo a la interfaz que corresponde
+                String user = txt_user.getText().trim();
+                String pass = txt_password.getText().trim();
+                try (Connection cn = Conexion.conectar()) {
+                    PreparedStatement pst = cn.prepareStatement("select estatus from useradmin where user=? and password=?");
+                    pst.setString(1, user);
+                    pst.setString(2, pass);
+                    ResultSet rs = pst.executeQuery();
+
+                    if (rs.next()) {
+                        String estatus = rs.getString("estatus");
+
+                        switch (estatus) {
+                            case "Admin" -> {
+                                Menu menu = new Menu();
+                                menu.setVisible(true);
+                                dispose();
+                            }
+                            case "User" -> {
+                                menuUser meUser = new menuUser();
+                                meUser.setVisible(true);
+                                dispose();
+                            }
+                        }
+
+                    } else {
+                        txt_password.setText("");
+                        txt_user.setText("");
+                        JOptionPane.showMessageDialog(null, "Usuario invalido, Intente nuevamente");
+                    }
+                }
+
+            } catch (SQLException e) {
+                System.err.println("error al consultar el usuario: " + e);
+            }
         }
     }
 
@@ -129,47 +193,10 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_passwordActionPerformed
 
     private void btt_ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_ingresarActionPerformed
-        //utilizamos el metodo para verificar los datos
-        validarText();
-        
-        if (valido == true) {
-            try {
-                //hacemos la consulta del estado del usuario para redirigirlo a la interfaz que corresponde
-                String user = txt_user.getText().trim();
-                String pass = txt_password.getText().trim();
-                try (Connection cn = Conexion.conectar()) {
-                    PreparedStatement pst = cn.prepareStatement("select estatus from useradmin where user=? and password=?");
-                    pst.setString(1, user);
-                    pst.setString(2, pass);
-                    ResultSet rs = pst.executeQuery();
-                    
-                    if (rs.next()) {
-                       String  estatus = rs.getString("estatus");
-                        
-                        switch (estatus) {
-                            case "admin" -> {
-                                Menu menu = new Menu();
-                                menu.setVisible(true);
-                                dispose();
-                            }
-                            case "user" -> {
-                                menuUser meUser = new menuUser();
-                                meUser.setVisible(true);
-                                dispose();
-                            }
-                        }
-                        
-                    } else {
-                        txt_password.setText("");
-                        txt_user.setText("");
-                        JOptionPane.showMessageDialog(null, "Usuario invalido, Intente nuevamente");
-                    }
-                }
 
-            } catch (SQLException e) {
-                System.err.println("error al consultar el usuario: " + e);
-            }
-        }
+        //ingresar con el metodo ingresar
+        ingresar();
+
     }//GEN-LAST:event_btt_ingresarActionPerformed
 
     /**

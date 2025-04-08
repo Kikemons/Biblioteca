@@ -2,6 +2,7 @@ package Ventanas;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,17 +19,24 @@ public class Info extends javax.swing.JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
 
-        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon icono = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
-                jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jlabel_wallpaper.setIcon(icono);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon icono = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
+                    jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jlabel_wallpaper.setIcon(icono);
+            this.repaint();
+        }
     }
-    
+
     @Override
-    public Image getIconImage(){
-        Image icon= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return icon;
+    public Image getIconImage() {
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image icon = Toolkit.getDefaultToolkit().getImage(url);
+            return icon;
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -36,7 +44,6 @@ public class Info extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel_1 = new javax.swing.JLabel();
-        jLabel_3 = new javax.swing.JLabel();
         jLabel_4 = new javax.swing.JLabel();
         jlabel_footer = new javax.swing.JLabel();
         Jlabel_titulo1 = new javax.swing.JLabel();
@@ -50,11 +57,6 @@ public class Info extends javax.swing.JFrame {
         jLabel_1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel_1.setText("Sistema creado por Enrique Monsalve");
         getContentPane().add(jLabel_1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, -1, -1));
-
-        jLabel_3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel_3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel_3.setText("https://kikeco.000webhostapp.com/");
-        getContentPane().add(jLabel_3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, -1, -1));
 
         jLabel_4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel_4.setForeground(new java.awt.Color(255, 255, 255));
@@ -111,7 +113,6 @@ public class Info extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Jlabel_titulo1;
     private javax.swing.JLabel jLabel_1;
-    private javax.swing.JLabel jLabel_3;
     private javax.swing.JLabel jLabel_4;
     private javax.swing.JLabel jlabel_footer;
     private javax.swing.JLabel jlabel_wallpaper;

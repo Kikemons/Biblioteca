@@ -1,4 +1,3 @@
-
 package Ventanas;
 
 import Clases.Conexion;
@@ -6,15 +5,15 @@ import java.awt.Color;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-
-
 public class AgregarLibro extends javax.swing.JFrame {
-    public static int id_libro=0;
-    boolean valido=false;
+
+    public static int id_libro = 0;
+    int valido = 0;
 
     public AgregarLibro() {
         initComponents();
@@ -23,52 +22,35 @@ public class AgregarLibro extends javax.swing.JFrame {
         setResizable(false);
         setSize(688, 491);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        id_libro=GestionarDatos.id_libro;
-        
-        
-        
-       ImageIcon wallpaper= new ImageIcon("src/Imagenes/fondo.jpg");
-       Icon fondo= new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
-               jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-       jLabel_wallpaper.setIcon(fondo);
-       this.repaint();
-       
-       
-       
-        try {
-            try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst=cn.prepareStatement("select * from Libro where id="+id_libro);
-                ResultSet rs=pst.executeQuery();
-                if (rs.next()) {
-                    txt_nombre.setText(rs.getString("Nombre"));
-                    txt_autor.setText(rs.getString("Autor"));
-                    txt_cantidad.setText(rs.getString("Ejemplares"));
-                    txt_categoria.setText(rs.getString("Categoria"));
-                    cmb_estado.setSelectedItem(rs.getString("Estado"));
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("error a la hora de consultar los datos del libro: "+e);
+        id_libro = GestionarDatos.id_libro;
+
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon();
+            Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
+                    jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jLabel_wallpaper.setIcon(fondo);
+            this.repaint();
         }
-       
-    
-       
+
     }
-    
+
     @Override
-    public Image getIconImage(){
-        Image retValue=Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retValue;
+    public Image getIconImage() {
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url!=null) {
+            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
+            return retValue;
+        }
+        return null;
     }
-    
-    public void limpiar(){
+
+    public void limpiar() {
         txt_autor.setBackground(Color.WHITE);
         txt_cantidad.setBackground(Color.WHITE);
-        txt_categoria.setBackground(Color.WHITE);
         txt_nombre.setBackground(Color.WHITE);
     }
 
-  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -82,12 +64,12 @@ public class AgregarLibro extends javax.swing.JFrame {
         jlabel_footer = new javax.swing.JLabel();
         txt_nombre = new javax.swing.JTextField();
         txt_autor = new javax.swing.JTextField();
-        txt_categoria = new javax.swing.JTextField();
         txt_cantidad = new javax.swing.JTextField();
         cmb_estado = new javax.swing.JComboBox<>();
         btt_Guardar = new javax.swing.JButton();
-        jLabel_wallpaper = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        Cmb_categoria = new javax.swing.JComboBox<>();
+        jLabel_wallpaper = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(getIconImage());
@@ -128,7 +110,6 @@ public class AgregarLibro extends javax.swing.JFrame {
         getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 430, -1, 23));
         getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 278, 36));
         getContentPane().add(txt_autor, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 278, 36));
-        getContentPane().add(txt_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 278, 36));
         getContentPane().add(txt_cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 220, 278, 36));
 
         cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin prestar", "Prestado" }));
@@ -142,67 +123,80 @@ public class AgregarLibro extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btt_Guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 280, 130, 100));
-        getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, 470));
 
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel7.setText("Estado:");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, -1, -1));
 
+        Cmb_categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LITERATURA", "NOVELA", "CUENTO " }));
+        getContentPane().add(Cmb_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 190, 40));
+        getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, 470));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_GuardarActionPerformed
-        String autor, nombre,cantidad,categoria;
-       autor=txt_autor.getText().trim();
-       nombre=txt_nombre.getText().trim();
-       cantidad=txt_cantidad.getText().trim();
-       categoria=txt_categoria.getText().trim();
-       
+        String autor, nombre, cantidad, categoria;
+        autor = txt_autor.getText().trim();
+        nombre = txt_nombre.getText().trim();
+        cantidad = txt_cantidad.getText().trim();
+
         if (autor.equals("")) {
             txt_autor.setBackground(Color.red);
-            
-        }else if (nombre.equals("")) {
+            valido++;
+        }
+        if (nombre.equals("")) {
             txt_nombre.setBackground(Color.red);
+            valido++;
         }
-        else if (cantidad.equals("")) {
+        if (cantidad.equals("")) {
             txt_cantidad.setBackground(Color.red);
+            valido++;
         }
-        else if (categoria.equals("")) {
-            txt_categoria.setBackground(Color.red);
-        }else{
-            valido=true;
-        }
-        
-        
-        
-        if (valido==true) {
-             try {
-                 try (Connection cn2 = Conexion.conectar()) {
-                     PreparedStatement pst2=cn2.prepareStatement("Insert into Libro values (?,?,?,?,?,?)");
-                     pst2.setInt(1, 0);
-                     pst2.setString(2, txt_nombre.getText().trim());
-                     pst2.setString(3, txt_autor.getText().trim());
-                     pst2.setString(4, txt_categoria.getText().trim());
-                     pst2.setString(5, txt_cantidad.getText().trim());
-                     pst2.setString(6, cmb_estado.getSelectedItem().toString());
-                     pst2.executeUpdate();
-                     this.dispose();
-                 }
-               
-               JOptionPane.showMessageDialog(null, "El registro del Nuevo libro fue exitoso!!");
-    
+
+        //validamos que el libro a ingresar no este ingresado
+        try {
+            try (Connection cn = Conexion.conectar()) {
+                PreparedStatement pst = cn.prepareStatement("select Nombre from libro where nombre=?");
+                pst.setString(1, nombre);
+                ResultSet rs = pst.executeQuery();
+                if (!rs.next()) {
+                    if (valido == 0) {
+                        try {
+                            try (Connection cn2 = Conexion.conectar()) {
+                                PreparedStatement pst2 = cn2.prepareStatement("Insert into Libro values (?,?,?,?,?,?,?)");
+                                pst2.setInt(1, 0);
+                                pst2.setString(2, nombre);
+                                pst2.setString(3, autor);
+                                pst2.setString(4, Cmb_categoria.getSelectedItem().toString());
+                                pst2.setString(5, cantidad);
+                                pst2.setString(6, cmb_estado.getSelectedItem().toString());
+                                pst2.setString(7, null);
+                                pst2.executeUpdate();
+                                this.dispose();
+                            }
+
+                            JOptionPane.showMessageDialog(null, "El registro del Nuevo libro fue exitoso!!");
+
+                        } catch (SQLException e) {
+                            System.err.println("error al guardar el nuevo libro: " + e);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Complete los datos del libro");
+                        limpiar();
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "El libro ya esta registrado!");
+                }
+            }
         } catch (SQLException e) {
-            System.err.println("error al guardar el nuevo libro: "+e);
+            System.err.println("Error a la hora de busscar el libbro " + e);
         }
-        }else{
-            JOptionPane.showMessageDialog(null, "Complete los datos del libro");
-            limpiar();
-        }
-        
-        
+
+
     }//GEN-LAST:event_btt_GuardarActionPerformed
 
-  
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -251,6 +245,7 @@ public class AgregarLibro extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> Cmb_categoria;
     private javax.swing.JLabel Jlabel_titulo;
     private javax.swing.JButton btt_Guardar;
     private javax.swing.JComboBox<String> cmb_estado;
@@ -264,7 +259,6 @@ public class AgregarLibro extends javax.swing.JFrame {
     private javax.swing.JLabel jlabel_footer;
     private javax.swing.JTextField txt_autor;
     private javax.swing.JTextField txt_cantidad;
-    private javax.swing.JTextField txt_categoria;
     private javax.swing.JTextField txt_nombre;
     // End of variables declaration//GEN-END:variables
 }

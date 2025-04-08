@@ -66,7 +66,7 @@
     <Component class="javax.swing.JButton" name="btt_consulta">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/aggUser.png"/>
+          <Image iconType="3" name="/Imagenes/descargar.png"/>
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="null"/>
@@ -84,7 +84,7 @@
     <Component class="javax.swing.JButton" name="btt_info">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/info.png"/>
+          <Image iconType="3" name="/Imagenes/Lector.png"/>
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="null"/>
@@ -102,7 +102,7 @@
     <Component class="javax.swing.JButton" name="btt_libros">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/descargar.png"/>
+          <Image iconType="3" name="/Imagenes/consulta.png"/>
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="null"/>
@@ -125,11 +125,11 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Agregar usuarios"/>
+        <Property name="text" type="java.lang.String" value="Administrar Usuario Admin"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="230" y="230" width="-1" height="-1"/>
+          <AbsoluteConstraints x="210" y="230" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -141,11 +141,11 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Informacion"/>
+        <Property name="text" type="java.lang.String" value="Usuarios"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="430" y="230" width="-1" height="-1"/>
+          <AbsoluteConstraints x="440" y="230" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>

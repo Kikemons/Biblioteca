@@ -6,73 +6,45 @@ import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-public class agregarUserLibro extends javax.swing.JFrame {
+public class AgregarUsuarioadmin extends javax.swing.JFrame {
 
-    public static int id_libro;
     boolean valido;
     String identidad = "";
-    String estadoLibro;
 
-    public agregarUserLibro() {
+    public AgregarUsuarioadmin() {
         initComponents();
-        setTitle("Biblioteca📚 - Agregar usuario relacionado con Libro (Lector)");
+        setTitle("Biblioteca📚 - Agregar usuario Admin");
         setLocationRelativeTo(null);
         setResizable(false);
         setResizable(false);
-        setSize(939, 518);
+        setSize(714, 519);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        id_libro = BuscarLibro.id_libro;
-        id_libro = GestionarDatos.id_libro;
-        estadoLibro = EliminarLibro.estadoLibro;
 
-        URL url= getClass().getResource("/Imagenes/fondo.jpg");
-        if(url!=null){
-             ImageIcon wallpaper = new ImageIcon(url);
-        Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
-                jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jLabel_wallpaper.setIcon(fondo);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
+                    jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jLabel_wallpaper.setIcon(fondo);
+            this.repaint();
         }
-       
 
         //arreglamos el textArea
         jScrollPane2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-        //hacemos una consulta para buscar los datos del libro
-        try {
-            try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst = cn.prepareStatement("select * from Libro where id=?");
-                pst.setString(1, Integer.toString(id_libro));
-                ResultSet rs = pst.executeQuery();
-                if (rs.next()) {
-                    txt_id.setText(rs.getString("id"));
-                    txt_nombreLibro.setText(rs.getString("nombre"));
-                    txt_autor.setText(rs.getString("autor"));
-                    txt_categoria.setText(rs.getString("categoria"));
-                    cmb_estado.setSelectedItem(estadoLibro);
-                    cn.close();
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println("error " + e);
-            JOptionPane.showMessageDialog(null, "Error al consultar los datos del libro!");
-        }
+        // pendiente para la consulta del usuario
         try {
             try (Connection cn2 = Conexion.conectar()) {
-                PreparedStatement pst2 = cn2.prepareCall("select * from usuario where IdLibro=?");
-                pst2.setInt(1, id_libro);
+                PreparedStatement pst2 = cn2.prepareCall("select * from usuario where Identidad=?");
+                pst2.setString(1, txt_Identidad.getText());
                 ResultSet rs = pst2.executeQuery();
                 if (rs.next()) {
-                    txt_Identidad.setText(rs.getString("Identidad"));
                     txt_Telefono.setText(rs.getString("Telefono"));
                     txt_apellido.setText(rs.getString("Apellidos"));
                     txt_observaciones.setText(rs.getString("Observacion"));
@@ -90,10 +62,10 @@ public class agregarUserLibro extends javax.swing.JFrame {
 
     @Override
     public Image getIconImage() {
-        URL url=ClassLoader.getSystemResource("Imagenes/icon.png");
-        if(url!=null){
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
             Image retValue = Toolkit.getDefaultToolkit().getImage(url);
-        return retValue;
+            return retValue;
         }
         return null;
     }
@@ -147,23 +119,12 @@ public class agregarUserLibro extends javax.swing.JFrame {
         txt_apellido = new javax.swing.JTextField();
         txt_Telefono = new javax.swing.JTextField();
         txt_Identidad = new javax.swing.JTextField();
-        btt_guaradar = new javax.swing.JButton();
+        btt_actualizar = new javax.swing.JButton();
         Jlabel_titulo1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txt_nombreLibro = new javax.swing.JTextField();
-        txt_autor = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        txt_categoria = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        txt_id = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        cmb_estado = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         txt_observaciones = new javax.swing.JTextArea();
-        btt_buscarUsuario = new javax.swing.JButton();
         jLabel_wallpaper = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -193,99 +154,52 @@ public class agregarUserLibro extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Guardar");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 440, -1, -1));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 440, -1, -1));
 
         jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setText("Creado por Enrique Monsalve Ing ");
-        getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 460, -1, 23));
+        getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 460, -1, 23));
         getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 278, 36));
         getContentPane().add(txt_apellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 278, 36));
         getContentPane().add(txt_Telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 278, 36));
         getContentPane().add(txt_Identidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 410, 278, 36));
 
-        btt_guaradar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btt_guaradar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/aggUser.png"))); // NOI18N
-        btt_guaradar.addActionListener(new java.awt.event.ActionListener() {
+        btt_actualizar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btt_actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/aggUser.png"))); // NOI18N
+        btt_actualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btt_guaradarActionPerformed(evt);
+                btt_actualizarActionPerformed(evt);
             }
         });
-        getContentPane().add(btt_guaradar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 330, 130, 110));
+        getContentPane().add(btt_actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 330, 130, 110));
 
         Jlabel_titulo1.setBackground(new java.awt.Color(102, 102, 102));
         Jlabel_titulo1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         Jlabel_titulo1.setForeground(new java.awt.Color(0, 0, 0));
         Jlabel_titulo1.setText("Biblioteca Virtual Fray Ignacio Mariño");
-        getContentPane().add(Jlabel_titulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, 455, 52));
+        getContentPane().add(Jlabel_titulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 0, 455, 52));
 
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Identidad:");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel4.setText("Titulo del libro:");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, -1, -1));
-
-        txt_nombreLibro.setEditable(false);
-        getContentPane().add(txt_nombreLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 120, 278, 36));
-
-        txt_autor.setEditable(false);
-        getContentPane().add(txt_autor, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, 278, 36));
-
-        jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Autor:");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 190, -1, -1));
-
-        txt_categoria.setEditable(false);
-        getContentPane().add(txt_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 278, 36));
-
-        jLabel8.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Categoria:");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, -1, -1));
-
-        txt_id.setEditable(false);
-        getContentPane().add(txt_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 410, 87, 36));
-
-        jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Id Libro:");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 380, -1, -1));
-
-        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin prestar", "Prestado" }));
-        getContentPane().add(cmb_estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 40, 160, 36));
-
         jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel10.setText("Observaciones:");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 90, -1, -1));
-
-        jLabel11.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel11.setText("Estado:");
-        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 20, -1, -1));
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, -1, -1));
 
         txt_observaciones.setColumns(20);
         txt_observaciones.setRows(5);
         jScrollPane2.setViewportView(txt_observaciones);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 120, 190, 190));
-
-        btt_buscarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btt_buscarUsuario.setText("Buscar usuario");
-        btt_buscarUsuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btt_buscarUsuarioActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btt_buscarUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 40, 130, 40));
-        getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 480));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 120, 190, 190));
+        getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 480));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btt_guaradarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_guaradarActionPerformed
+    private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
 
         //inplementamos el metodo de verificar los txtFile
         VerificarTextFile();
@@ -296,31 +210,12 @@ public class agregarUserLibro extends javax.swing.JFrame {
                     PreparedStatement pst = cn.prepareStatement("select * from usuario where identidad=?");
                     pst.setString(1, identidad);
                     ResultSet rs = pst.executeQuery();
-                    if (rs.next()) {
-                        String nom, ape, tel;
-                        nom = rs.getString("Nombres");
-                        ape = rs.getString("Apellidos");
-                        Integer Identidad = Integer.parseInt(rs.getString("Identidad"));
-                        tel = rs.getString("Telefono");
 
+                    //hacemos el ingreso del nuevo usuario
+                    if (!rs.next()) {
                         try {
                             try (Connection cn2 = Conexion.conectar()) {
-                                PreparedStatement pst2 = cn2.prepareStatement("update usuario set Observacion=?, IdLibro=? where Identidad=? ");
-                                pst2.setString(1, txt_observaciones.getText().trim());
-                                pst2.setInt(2, Integer.parseInt(txt_id.getText().trim()));
-                                pst2.setInt(3, Identidad);
-
-                                pst2.executeUpdate();
-                                cn2.close();
-
-                            }
-                        } catch (SQLException e) {
-                            System.err.println("error al ingresar el usuario a la base de datos " + e);
-                        }
-                    } //hacemos el ingreso del nuevo usuario
-                    else {
-                        try {
-                            try (Connection cn2 = Conexion.conectar()) {
+                                System.out.println("identidad vacia  " + identidad);
                                 PreparedStatement pst2 = cn2.prepareStatement("insert into usuario values (?,?,?,?,?,?,?) ");
                                 pst2.setInt(1, 0);
                                 pst2.setString(2, txt_nombre.getText().trim());
@@ -328,7 +223,6 @@ public class agregarUserLibro extends javax.swing.JFrame {
                                 pst2.setString(4, txt_Identidad.getText().trim());
                                 pst2.setString(5, txt_Telefono.getText().trim());
                                 pst2.setString(6, txt_observaciones.getText().trim());
-                                pst2.setInt(7, Integer.parseInt(txt_id.getText().trim()));
 
                                 pst2.executeUpdate();
                                 cn2.close();
@@ -346,49 +240,22 @@ public class agregarUserLibro extends javax.swing.JFrame {
 
             dispose();
 
-            try {
-                try (Connection conexion = Conexion.conectar()) {
-                    PreparedStatement preparedStatement = conexion.prepareStatement("update libro set Estado=?, Observacion=? where Id=?");
-                    preparedStatement.setString(1, cmb_estado.getSelectedItem().toString());
-                    preparedStatement.setString(2, txt_observaciones.getText());
-                    preparedStatement.setInt(3, id_libro);
-                    preparedStatement.executeUpdate();
-                }
-            } catch (SQLException e) {
-                System.err.println("error al actualizar el estado del libro");
-            }
-            // pendiente para reviion
-
-            try {
-                if (cmb_estado.getSelectedItem().toString().equals("Sin prestar")) {
-                    Connection cn = Conexion.conectar();
-                    PreparedStatement pst = cn.prepareStatement("update usuario set Observacion=?, IdLibro=null where Identidad=?");
-                    pst.setString(1, "");
-                    pst.setString(2, identidad);
-                    pst.executeUpdate();
-                }
-            } catch (SQLException e) {
-                System.err.println("error a la hora de actualizar la observacion del usuario " + e);
-            }
+//                try {
+//                    if (cmb_estado.getSelectedItem().toString().equals("Sin prestar")) {
+//                        System.out.println("ingreso a cambiar ");
+//                        Connection cn = Conexion.conectar();
+//                        PreparedStatement pst = cn.prepareStatement("update usuario set Observacion=?, IdLibro=null where Identidad=?");
+//                        pst.setString(1,"");
+//                        pst.setString(2,identidad);
+//                        pst.executeUpdate();
+//                    }
+//                } catch (SQLException e) {
+//                    System.err.println("error a la hora de actualizar la observacion del usuario "+e);
+//                }
         }
 
 
-    }//GEN-LAST:event_btt_guaradarActionPerformed
-
-    private void btt_buscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_buscarUsuarioActionPerformed
-        try {
-            String texto= JOptionPane.showInputDialog("Ingrese el numero de identidad del usuario");
-            
-            if (texto!=null) { 
-            Integer identificacion=Integer.parseInt(texto);   
-                System.out.println("llenamos el texto con los datos del usuario");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ingrese valores validos");
-
-        }
-        
-    }//GEN-LAST:event_btt_buscarUsuarioActionPerformed
+    }//GEN-LAST:event_btt_actualizarActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -404,8 +271,256 @@ public class agregarUserLibro extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(agregarUserLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AgregarUsuarioadmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -426,38 +541,27 @@ public class agregarUserLibro extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new agregarUserLibro().setVisible(true);
+            new AgregarUsuarioadmin().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Jlabel_titulo;
     private javax.swing.JLabel Jlabel_titulo1;
-    private javax.swing.JButton btt_buscarUsuario;
-    private javax.swing.JButton btt_guaradar;
-    private javax.swing.JComboBox<String> cmb_estado;
+    private javax.swing.JButton btt_actualizar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel_wallpaper;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel jlabel_footer;
     private javax.swing.JTextField txt_Identidad;
     private javax.swing.JTextField txt_Telefono;
     private javax.swing.JTextField txt_apellido;
-    private javax.swing.JTextField txt_autor;
-    private javax.swing.JTextField txt_categoria;
-    private javax.swing.JTextField txt_id;
     private javax.swing.JTextField txt_nombre;
-    private javax.swing.JTextField txt_nombreLibro;
     private javax.swing.JTextArea txt_observaciones;
     // End of variables declaration//GEN-END:variables
 }

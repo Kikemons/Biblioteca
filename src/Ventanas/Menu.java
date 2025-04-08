@@ -2,6 +2,7 @@ package Ventanas;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -15,18 +16,25 @@ public class Menu extends javax.swing.JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initComponents();
 
-        ImageIcon wallpáper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon icon = new ImageIcon(wallpáper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
-                jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jlabel_wallpaper.setIcon(icon);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpáper = new ImageIcon(url);
+            Icon icon = new ImageIcon(wallpáper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
+                    jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jlabel_wallpaper.setIcon(icon);
+            this.repaint();
+        }
 
     }
 
     @Override
     public Image getIconImage() {
-        Image retvalue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retvalue;
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image retvalue = Toolkit.getDefaultToolkit().getImage(url);
+            return retvalue;
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -58,7 +66,7 @@ public class Menu extends javax.swing.JFrame {
         jlabel_footer.setText("Creado por Enrique Monsalve Ing ");
         getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, -1, 23));
 
-        btt_consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/aggUser.png"))); // NOI18N
+        btt_consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/descargar.png"))); // NOI18N
         btt_consulta.setBorder(null);
         btt_consulta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -67,7 +75,7 @@ public class Menu extends javax.swing.JFrame {
         });
         getContentPane().add(btt_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 140, 140));
 
-        btt_info.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/info.png"))); // NOI18N
+        btt_info.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Lector.png"))); // NOI18N
         btt_info.setBorder(null);
         btt_info.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,7 +84,7 @@ public class Menu extends javax.swing.JFrame {
         });
         getContentPane().add(btt_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 80, 140, 140));
 
-        btt_libros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/descargar.png"))); // NOI18N
+        btt_libros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/consulta.png"))); // NOI18N
         btt_libros.setBorder(null);
         btt_libros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,13 +95,13 @@ public class Menu extends javax.swing.JFrame {
 
         Jlabel_consulta.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         Jlabel_consulta.setForeground(new java.awt.Color(255, 255, 255));
-        Jlabel_consulta.setText("Agregar usuarios");
-        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, -1, -1));
+        Jlabel_consulta.setText("Administrar Usuario Admin");
+        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 230, -1, -1));
 
         jlabel_info.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jlabel_info.setForeground(new java.awt.Color(255, 255, 255));
-        jlabel_info.setText("Informacion");
-        getContentPane().add(jlabel_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 230, -1, -1));
+        jlabel_info.setText("Usuarios");
+        getContentPane().add(jlabel_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 230, -1, -1));
 
         jlabel_baseD.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jlabel_baseD.setForeground(new java.awt.Color(255, 255, 255));
@@ -105,17 +113,18 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_librosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_librosActionPerformed
-        GestionarDatos gestionarDatos= new GestionarDatos();
+        GestionarDatos gestionarDatos = new GestionarDatos();
         gestionarDatos.setVisible(true);
     }//GEN-LAST:event_btt_librosActionPerformed
 
     private void btt_consultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_consultaActionPerformed
-        
+        GestionarDatosAdmin GDA = new GestionarDatosAdmin();
+        GDA.setVisible(true);
     }//GEN-LAST:event_btt_consultaActionPerformed
 
     private void btt_infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_infoActionPerformed
-       Info info= new Info();
-       info.setVisible(true);
+        Info info = new Info();
+        info.setVisible(true);
     }//GEN-LAST:event_btt_infoActionPerformed
 
     /**

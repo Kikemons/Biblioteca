@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
@@ -31,11 +32,14 @@ public class BuscarLibro extends javax.swing.JFrame {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setSize(805, 496);
 
-        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon Icono = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
-                jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jlabel_wallpaper.setIcon(Icono);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon icono = new ImageIcon(wallpaper.getImage().getScaledInstance(jlabel_wallpaper.getWidth(),
+                    jlabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jlabel_wallpaper.setIcon(icono);
+            this.repaint();
+        }
 
         jTable_consulta = new JTable(model);
         jScrollPane_consulta.setViewportView(jTable_consulta);
@@ -73,14 +77,18 @@ public class BuscarLibro extends javax.swing.JFrame {
                 }
             }
         });
-        
-        
+
     }
 
     @Override
     public Image getIconImage() {
-        Image retvalu = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retvalu;
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
+            return retValue;
+        }
+        return null;
+
     }
 
     @SuppressWarnings("unchecked")
@@ -155,8 +163,6 @@ public class BuscarLibro extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
-    
 
         model.setRowCount(0);
         String texto = txt_nombre.getText().trim();
@@ -182,7 +188,7 @@ public class BuscarLibro extends javax.swing.JFrame {
 
         } else if (buscar.equals("Nombre") & !txt_nombre.getText().trim().equals("")) {
             model.setRowCount(0);
-            
+
             try {
                 Connection cn = Conexion.conectar();
                 PreparedStatement pst = cn.prepareStatement("select id, nombre, Autor, Categoria, Estado from libro where Nombre like ?");
@@ -244,13 +250,13 @@ public class BuscarLibro extends javax.swing.JFrame {
 
                 if (fila_point > -1) {
                     id_libro = (int) model.getValueAt(fila_point, columna);
-                    EstadoLibro estadoLibro= new EstadoLibro();
+                    EstadoLibro estadoLibro = new EstadoLibro();
                     estadoLibro.setVisible(true);
                     dispose();
                 }
             }
         });
-    
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cmb_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_buscarActionPerformed
@@ -272,27 +278,23 @@ public class BuscarLibro extends javax.swing.JFrame {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
 
-}
+                }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BuscarLibro.class  
+            java.util.logging.Logger.getLogger(BuscarLibro.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(BuscarLibro.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-} catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BuscarLibro.class  
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(BuscarLibro.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-} catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BuscarLibro.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BuscarLibro.class  
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(BuscarLibro.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -317,5 +319,4 @@ public class BuscarLibro extends javax.swing.JFrame {
     private javax.swing.JTextField txt_nombre;
     // End of variables declaration//GEN-END:variables
 
-  
 }

@@ -4,6 +4,7 @@ import Clases.Conexion;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -22,11 +23,14 @@ public class EstadoLibro extends javax.swing.JFrame {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         id_libro = BuscarLibro.id_libro;
 
-        ImageIcon wallpaper = new ImageIcon("src/Imagenes/fondo.jpg");
-        Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
-                jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jLabel_wallpaper.setIcon(fondo);
-        this.repaint();
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
+                    jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jLabel_wallpaper.setIcon(fondo);
+            this.repaint();
+        }
 
         try {
             try (Connection cn = Conexion.conectar()) {
@@ -40,10 +44,10 @@ public class EstadoLibro extends javax.swing.JFrame {
                     txt_categoria.setText(rs.getString("Categoria"));
                     cmb_estado.setSelectedItem(rs.getString("Estado"));
                     estadoLibroBase = rs.getString("Estado");
-                }else{
+                } else {
                     System.out.println("error al consultar");
                 }
-                    
+
                 cn.close();
             }
 
@@ -53,10 +57,14 @@ public class EstadoLibro extends javax.swing.JFrame {
 
     }
 
-    @Override
+      @Override
     public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
-        return retValue;
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
+            return retValue;
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -156,10 +164,9 @@ public class EstadoLibro extends javax.swing.JFrame {
     private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
 //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro
         if (estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
-            System.out.println("cmb"+cmb_estado.getSelectedItem().toString());
-            estadoLibro=cmb_estado.getSelectedItem().toString();
-            System.out.println("estado "+estadoLibroBase);
-            System.out.println("lluviaaa");
+            System.out.println("cmb" + cmb_estado.getSelectedItem().toString());
+            estadoLibro = cmb_estado.getSelectedItem().toString();
+            System.out.println("estado " + estadoLibroBase);
             agregarUserLibro aUser = new agregarUserLibro();
             aUser.setVisible(true);
             dispose();
