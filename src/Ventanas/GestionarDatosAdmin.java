@@ -168,7 +168,7 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_agregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_agregarLibroActionPerformed
-        AgregarUsuarioAdmin aggUser = new AgregarUsuarioAdmin();
+        AgregarUsuario aggUser = new AgregarUsuario();
         aggUser.setVisible(true);
         dispose();
     }//GEN-LAST:event_btt_agregarLibroActionPerformed
