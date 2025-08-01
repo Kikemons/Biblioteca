@@ -210,10 +210,17 @@
     <Component class="javax.swing.JComboBox" name="Cmb_categoria">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="LITERATURA"/>
-            <StringItem index="1" value="NOVELA"/>
-            <StringItem index="2" value="CUENTO "/>
+          <StringArray count="10">
+            <StringItem index="0" value="GENERALES"/>
+            <StringItem index="1" value="FILOSOFIA"/>
+            <StringItem index="2" value="RELIGION"/>
+            <StringItem index="3" value="SOCIALES"/>
+            <StringItem index="4" value="NUMEROS"/>
+            <StringItem index="5" value="INGENIERIA"/>
+            <StringItem index="6" value="GEOGRAFIA"/>
+            <StringItem index="7" value="NOVELA"/>
+            <StringItem index="8" value="POESIA"/>
+            <StringItem index="9" value="CUENTO"/>
           </StringArray>
         </Property>
       </Properties>

@@ -45,6 +45,8 @@ public class GestionarDatos extends javax.swing.JFrame {
 
         jTable_consulta = new JTable(model);
         jScrollPane_consulta.setViewportView(jTable_consulta);
+        
+        
 
         model.addColumn("Id");
         model.addColumn("Nombre");
@@ -75,6 +77,8 @@ public class GestionarDatos extends javax.swing.JFrame {
                     jlabel_buscar.setText("Ingrese el Autor del libro que desea eliminar:");
                 case "Categoria" ->
                     jlabel_buscar.setText("Ingrese la categoria del libro que desea eliminar:");
+                case "Estado" ->
+                    jlabel_buscar.setText("Ingrese estado del libro que desea buscar (Prestado/Sin prestar):");
                 default -> {
                 }
             }
@@ -177,7 +181,7 @@ public class GestionarDatos extends javax.swing.JFrame {
         jlabel_footer.setText("Creado por Enrique Monsalve Ing ");
         getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 450, -1, 23));
 
-        cmb_buscar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Autor", "Categoria" }));
+        cmb_buscar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Autor", "Categoria", "Estado" }));
         cmb_buscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmb_buscarActionPerformed(evt);
@@ -261,7 +265,24 @@ public class GestionarDatos extends javax.swing.JFrame {
                 System.err.println("error al buscar libro por Autor: " + e);
             }
 
-        } else {
+        } else if (buscar.equals("Estado")) {
+             try {
+                Connection cn = Conexion.conectar();
+                PreparedStatement pst = cn.prepareStatement("select id, nombre, Autor, Categoria, Estado from libro where Estado like ?");
+                pst.setString(1, "%" + texto + "%");
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    Object[] libro = new Object[5];
+                    for (int i = 0; i < 5; i++) {
+                        libro[i] = rs.getObject(i + 1);
+                    }
+                    model.addRow(libro);
+                    
+                }
+            } catch (SQLException e) {
+                System.err.println("error al buscar libro por Estado: " + e);
+            }
+        }else {
             model.setRowCount(0);
             try {
                 Connection cn = Conexion.conectar();

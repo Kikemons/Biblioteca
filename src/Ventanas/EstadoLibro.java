@@ -7,16 +7,16 @@ import java.awt.Toolkit;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 public class EstadoLibro extends javax.swing.JFrame {
 
     public static int id_libro = 0;
-    public static String estadoLibroBase;
     public static String estadoLibro;
 
     public EstadoLibro() {
         initComponents();
-        setTitle("Biblioteca📚 - Estado del Libro pruebaaa");
+        setTitle("Biblioteca📚 - Estado del Libro");
         setLocationRelativeTo(null);
         setResizable(false);
         setSize(688, 491);
@@ -34,7 +34,8 @@ public class EstadoLibro extends javax.swing.JFrame {
 
         try {
             try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst = cn.prepareStatement("select * from libro where id=" + id_libro);
+                PreparedStatement pst = cn.prepareStatement("select * from libro where id=?");
+                pst.setInt(1, id_libro);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
                     txt_nombre.setText(rs.getString("Nombre"));
@@ -43,9 +44,9 @@ public class EstadoLibro extends javax.swing.JFrame {
                     txt_id.setText(rs.getString("id"));
                     txt_categoria.setText(rs.getString("Categoria"));
                     cmb_estado.setSelectedItem(rs.getString("Estado"));
-                    estadoLibroBase = rs.getString("Estado");
+                    estadoLibro = rs.getString("Estado");
                 } else {
-                    System.out.println("error al consultar");
+                    JOptionPane.showMessageDialog(null, "Error al consultar el libro ");
                 }
 
                 cn.close();
@@ -137,7 +138,7 @@ public class EstadoLibro extends javax.swing.JFrame {
         txt_cantidad.setEditable(false);
         getContentPane().add(txt_cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 220, 278, 36));
 
-        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin prestar", "Prestado" }));
+        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SIN PRESTAR", "PRESTADO" }));
         getContentPane().add(cmb_estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 120, 160, 36));
 
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -163,10 +164,8 @@ public class EstadoLibro extends javax.swing.JFrame {
 
     private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
 //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro
-        if (estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
-            System.out.println("cmb" + cmb_estado.getSelectedItem().toString());
+        if (!estadoLibro.equals(cmb_estado.getSelectedItem().toString())) {
             estadoLibro = cmb_estado.getSelectedItem().toString();
-            System.out.println("estado " + estadoLibroBase);
             agregarUserLibro aUser = new agregarUserLibro();
             aUser.setVisible(true);
             dispose();

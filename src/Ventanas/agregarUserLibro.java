@@ -6,8 +6,6 @@ import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -16,9 +14,11 @@ import javax.swing.JScrollPane;
 public class agregarUserLibro extends javax.swing.JFrame {
 
     public static int id_libro;
+    String estatus;
     boolean valido;
-    String identidad = "";
     String estadoLibro;
+    int telefono;
+    int identidad;
 
     public agregarUserLibro() {
         initComponents();
@@ -28,19 +28,23 @@ public class agregarUserLibro extends javax.swing.JFrame {
         setResizable(false);
         setSize(939, 518);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        id_libro = BuscarLibro.id_libro;
-        id_libro = GestionarDatos.id_libro;
-        estadoLibro = EliminarLibro.estadoLibro;
-
-        URL url= getClass().getResource("/Imagenes/fondo.jpg");
-        if(url!=null){
-             ImageIcon wallpaper = new ImageIcon(url);
-        Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
-                jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
-        jLabel_wallpaper.setIcon(fondo);
-        this.repaint();
+        estatus = Login.estatus;
+        if (estatus.equals("User")) {
+            id_libro = EstadoLibro.id_libro;
+            estadoLibro = EstadoLibro.estadoLibro;
+        } else {
+            id_libro = GestionarDatos.id_libro;
+            estadoLibro = EliminarLibro.estadoLibro;
         }
-       
+
+        URL url = getClass().getResource("/Imagenes/fondo.jpg");
+        if (url != null) {
+            ImageIcon wallpaper = new ImageIcon(url);
+            Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
+                    jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
+            jLabel_wallpaper.setIcon(fondo);
+            this.repaint();
+        }
 
         //arreglamos el textArea
         jScrollPane2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -50,13 +54,13 @@ public class agregarUserLibro extends javax.swing.JFrame {
         try {
             try (Connection cn = Conexion.conectar()) {
                 PreparedStatement pst = cn.prepareStatement("select * from Libro where id=?");
-                pst.setString(1, Integer.toString(id_libro));
+                pst.setInt(1, id_libro);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
                     txt_id.setText(rs.getString("id"));
                     txt_nombreLibro.setText(rs.getString("nombre"));
                     txt_autor.setText(rs.getString("autor"));
-                    txt_categoria.setText(rs.getString("categoria"));
+                    Cmb_categoria.setSelectedItem(rs.getString("categoria"));
                     cmb_estado.setSelectedItem(estadoLibro);
                     cn.close();
                 }
@@ -90,10 +94,10 @@ public class agregarUserLibro extends javax.swing.JFrame {
 
     @Override
     public Image getIconImage() {
-        URL url=ClassLoader.getSystemResource("Imagenes/icon.png");
-        if(url!=null){
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
             Image retValue = Toolkit.getDefaultToolkit().getImage(url);
-        return retValue;
+            return retValue;
         }
         return null;
     }
@@ -121,6 +125,16 @@ public class agregarUserLibro extends javax.swing.JFrame {
             txt_apellido.setText("");
             valido = false;
         }
+        if (txt_nombreLibro.getText().trim().equals("")) {
+            txt_nombreLibro.setBackground(Color.red);
+            txt_nombreLibro.setText("");
+            valido = false;
+        }
+        if (txt_autor.getText().trim().equals("")) {
+            txt_autor.setBackground(Color.red);
+            txt_autor.setText("");
+            valido = false;
+        }
         if (!valido) {
             System.out.println("debe mostrar el jop");
             JOptionPane.showMessageDialog(null, "complete todos los campos para poder"
@@ -129,8 +143,40 @@ public class agregarUserLibro extends javax.swing.JFrame {
             txt_nombre.setBackground(Color.WHITE);
             txt_apellido.setBackground(Color.WHITE);
             txt_Telefono.setBackground(Color.WHITE);
+            txt_nombreLibro.setBackground(Color.white);
+            txt_autor.setBackground(Color.white);
         }
-        identidad = txt_Identidad.getText().trim();
+
+        try {
+            identidad = Integer.parseInt(txt_Identidad.getText());
+            telefono = Integer.parseInt(txt_Telefono.getText());
+        } catch (NumberFormatException e) {
+            if (identidad < 0 && telefono < 0) {
+                txt_Identidad.setBackground(Color.red);
+                JOptionPane.showMessageDialog(null, "Error al digitar el campo Identidad y Telefono");
+                txt_Identidad.setBackground(Color.white);
+                txt_Identidad.setText("");
+                txt_Telefono.setBackground(Color.red);
+                txt_Telefono.setBackground(Color.white);
+                txt_Telefono.setText("");
+                valido = false;
+            } else if (identidad < 0) {
+                txt_Identidad.setBackground(Color.red);
+                JOptionPane.showMessageDialog(null, "Error al digitar el campo Identidad");
+                System.out.println("error aqui identidad");
+                txt_Identidad.setBackground(Color.white);
+                txt_Identidad.setText("");
+                valido = false;
+            } else if (telefono < 0) {
+                txt_Telefono.setBackground(Color.red);
+                JOptionPane.showMessageDialog(null, "Error al digitar el campo Identidad");
+                System.out.println("error aqui Telefono");
+                txt_Telefono.setBackground(Color.white);
+                txt_Telefono.setText("");
+                valido = false;
+            }
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -154,7 +200,6 @@ public class agregarUserLibro extends javax.swing.JFrame {
         txt_nombreLibro = new javax.swing.JTextField();
         txt_autor = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        txt_categoria = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         txt_id = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
@@ -164,6 +209,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txt_observaciones = new javax.swing.JTextArea();
         btt_buscarUsuario = new javax.swing.JButton();
+        Cmb_categoria = new javax.swing.JComboBox<>();
         jLabel_wallpaper = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -227,11 +273,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel4.setText("Titulo del libro:");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, -1, -1));
-
-        txt_nombreLibro.setEditable(false);
         getContentPane().add(txt_nombreLibro, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 120, 278, 36));
-
-        txt_autor.setEditable(false);
         getContentPane().add(txt_autor, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, 278, 36));
 
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -239,23 +281,20 @@ public class agregarUserLibro extends javax.swing.JFrame {
         jLabel7.setText("Autor:");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 190, -1, -1));
 
-        txt_categoria.setEditable(false);
-        getContentPane().add(txt_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 278, 36));
-
         jLabel8.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Categoria:");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, -1, -1));
 
         txt_id.setEditable(false);
-        getContentPane().add(txt_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 410, 87, 36));
+        getContentPane().add(txt_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 410, 87, 36));
 
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Id Libro:");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 380, -1, -1));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 380, -1, -1));
 
-        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin prestar", "Prestado" }));
+        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SIN PRESTAR", "PRESTADO" }));
         getContentPane().add(cmb_estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 40, 160, 36));
 
         jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -280,6 +319,9 @@ public class agregarUserLibro extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btt_buscarUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 40, 130, 40));
+
+        Cmb_categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GENERALES", "FILOSOFIA", "RELIGION", "SOCIALES", "NUMEROS", "INGENIERIA", "GEOGRAFIA", "NOVELA", "POESIA", "CUENTO" }));
+        getContentPane().add(Cmb_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 190, 40));
         getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 480));
 
         pack();
@@ -294,19 +336,16 @@ public class agregarUserLibro extends javax.swing.JFrame {
             try {
                 try (Connection cn = Conexion.conectar()) {
                     PreparedStatement pst = cn.prepareStatement("select * from usuario where identidad=?");
-                    pst.setString(1, identidad);
+                    pst.setInt(1, identidad);
                     ResultSet rs = pst.executeQuery();
                     if (rs.next()) {
-                        String nom, ape, tel;
-                        nom = rs.getString("Nombres");
-                        ape = rs.getString("Apellidos");
-                        Integer Identidad = Integer.parseInt(rs.getString("Identidad"));
-                        tel = rs.getString("Telefono");
+                        Integer Identidad = Integer.valueOf(rs.getString("Identidad"));
 
                         try {
                             try (Connection cn2 = Conexion.conectar()) {
                                 PreparedStatement pst2 = cn2.prepareStatement("update usuario set Observacion=?, IdLibro=? where Identidad=? ");
-                                pst2.setString(1, txt_observaciones.getText().trim());
+                                String estado = cmb_estado.getSelectedItem().toString();
+                                pst2.setString(1, estado + " " + txt_observaciones.getText().toUpperCase());
                                 pst2.setInt(2, Integer.parseInt(txt_id.getText().trim()));
                                 pst2.setInt(3, Identidad);
 
@@ -320,39 +359,55 @@ public class agregarUserLibro extends javax.swing.JFrame {
                     } //hacemos el ingreso del nuevo usuario
                     else {
                         try {
-                            try (Connection cn2 = Conexion.conectar()) {
-                                PreparedStatement pst2 = cn2.prepareStatement("insert into usuario values (?,?,?,?,?,?,?) ");
+                            // Establecer la variable de sesión
+                            try (Connection c = Conexion.conectar() // Una sola conexión
+                                    ) {
+                                // Establecer la variable de sesión
+                                PreparedStatement psSession = c.prepareStatement("SET @UsuarioResponsable = ?");
+                                psSession.setString(1, Login.user);
+                                psSession.execute();
+
+                                // Insertar el usuario (esto activa el trigger)
+                                PreparedStatement pst2 = c.prepareStatement("INSERT INTO usuario VALUES (?,?,?,?,?,?,?)");
                                 pst2.setInt(1, 0);
-                                pst2.setString(2, txt_nombre.getText().trim());
-                                pst2.setString(3, txt_apellido.getText().trim());
-                                pst2.setString(4, txt_Identidad.getText().trim());
-                                pst2.setString(5, txt_Telefono.getText().trim());
-                                pst2.setString(6, txt_observaciones.getText().trim());
-                                pst2.setInt(7, Integer.parseInt(txt_id.getText().trim()));
+                                pst2.setString(2, txt_nombre.getText().trim().toUpperCase());
+                                pst2.setString(3, txt_apellido.getText().trim().toUpperCase());
+                                pst2.setLong(4, Long.parseLong(txt_Identidad.getText().trim()));
+                                pst2.setLong(5, Long.parseLong(txt_Telefono.getText().trim()));
+                                pst2.setString(6, "USUARIO CREADO");
+                                pst2.setInt(7, id_libro); // o elimina esta columna si no se usa
 
                                 pst2.executeUpdate();
-                                cn2.close();
-
                             }
+                            dispose();
+
                         } catch (SQLException e) {
-                            System.err.println("error al ingresar el usuario a la base de datos " + e);
+                            System.err.println("Error al ingresar el usuario a la base de datos: " + e);
                         }
                         cn.close();
                     }
                 }
             } catch (SQLException e) {
-                System.err.println("error a la hora de consultar los datos el id del usuario " + e);
+                JOptionPane.showMessageDialog(null, "error a la hora de consultar los datos el id del usuario ");
             }
 
             dispose();
 
             try {
                 try (Connection conexion = Conexion.conectar()) {
-                    PreparedStatement preparedStatement = conexion.prepareStatement("update libro set Estado=?, Observacion=? where Id=?");
+                    PreparedStatement psSession = conexion.prepareStatement("SET @UsuarioResponsable = ?");
+                    psSession.setString(1, Login.user);
+                    System.out.println("el user es: " + Login.user);
+                    psSession.execute();
+
+                    PreparedStatement preparedStatement = conexion.prepareStatement("update libro set Estado=?, Nombre=?, Autor=?, Observacion=? where Id=?");
                     preparedStatement.setString(1, cmb_estado.getSelectedItem().toString());
-                    preparedStatement.setString(2, txt_observaciones.getText());
-                    preparedStatement.setInt(3, id_libro);
+                    preparedStatement.setString(2, txt_nombreLibro.getText().trim().toUpperCase());
+                    preparedStatement.setString(3, txt_autor.getText().trim().toUpperCase());
+                    preparedStatement.setString(4, txt_observaciones.getText().toUpperCase());
+                    preparedStatement.setInt(5, id_libro);
                     preparedStatement.executeUpdate();
+                    conexion.close();
                 }
             } catch (SQLException e) {
                 System.err.println("error al actualizar el estado del libro");
@@ -360,12 +415,14 @@ public class agregarUserLibro extends javax.swing.JFrame {
             // pendiente para reviion
 
             try {
-                if (cmb_estado.getSelectedItem().toString().equals("Sin prestar")) {
-                    Connection cn = Conexion.conectar();
-                    PreparedStatement pst = cn.prepareStatement("update usuario set Observacion=?, IdLibro=null where Identidad=?");
-                    pst.setString(1, "");
-                    pst.setString(2, identidad);
-                    pst.executeUpdate();
+                if (cmb_estado.getSelectedItem().toString().equals("SIN PRESTAR")) {
+                    try (Connection cn = Conexion.conectar()) {
+
+                        PreparedStatement pst = cn.prepareStatement("update usuario set Observacion=?, IdLibro=null where Identidad=?");
+                        pst.setString(1, "");
+                        pst.setInt(2, identidad);
+                        pst.executeUpdate();
+                    }
                 }
             } catch (SQLException e) {
                 System.err.println("error a la hora de actualizar la observacion del usuario " + e);
@@ -377,17 +434,28 @@ public class agregarUserLibro extends javax.swing.JFrame {
 
     private void btt_buscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_buscarUsuarioActionPerformed
         try {
-            String texto= JOptionPane.showInputDialog("Ingrese el numero de identidad del usuario");
-            
-            if (texto!=null) { 
-            Integer identificacion=Integer.parseInt(texto);   
-                System.out.println("llenamos el texto con los datos del usuario");
+            String texto = JOptionPane.showInputDialog("Ingrese el numero de identidad del usuario");
+
+            if (texto != null) {
+                Integer identificacion = Integer.parseInt(texto);
+                Connection cn = Conexion.conectar();
+                PreparedStatement pst = cn.prepareStatement("select * from usuario where Identidad=?");
+                pst.setInt(1, identificacion);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    txt_Identidad.setText(rs.getString("Identidad"));
+                    txt_Telefono.setText(rs.getString("Telefono"));
+                    txt_apellido.setText(rs.getString("Apellidos"));
+                    txt_nombre.setText(rs.getString("Nombres"));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuario no registrado");
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ingrese valores validos");
 
         }
-        
+
     }//GEN-LAST:event_btt_buscarUsuarioActionPerformed
 
     public static void main(String args[]) {
@@ -431,6 +499,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> Cmb_categoria;
     private javax.swing.JLabel Jlabel_titulo;
     private javax.swing.JLabel Jlabel_titulo1;
     private javax.swing.JButton btt_buscarUsuario;
@@ -454,7 +523,6 @@ public class agregarUserLibro extends javax.swing.JFrame {
     private javax.swing.JTextField txt_Telefono;
     private javax.swing.JTextField txt_apellido;
     private javax.swing.JTextField txt_autor;
-    private javax.swing.JTextField txt_categoria;
     private javax.swing.JTextField txt_id;
     private javax.swing.JTextField txt_nombre;
     private javax.swing.JTextField txt_nombreLibro;

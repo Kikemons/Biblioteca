@@ -47,6 +47,7 @@ public class Info extends javax.swing.JFrame {
         jLabel_4 = new javax.swing.JLabel();
         jlabel_footer = new javax.swing.JLabel();
         Jlabel_titulo1 = new javax.swing.JLabel();
+        jLabel_5 = new javax.swing.JLabel();
         jlabel_wallpaper = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -60,8 +61,8 @@ public class Info extends javax.swing.JFrame {
 
         jLabel_4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel_4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel_4.setText("Facebook/ linkedin / Instagram");
-        getContentPane().add(jLabel_4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, -1, -1));
+        jLabel_4.setText("En todas las redes como: Enrique Monsalve");
+        getContentPane().add(jLabel_4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 250, 20));
 
         jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));
@@ -73,6 +74,11 @@ public class Info extends javax.swing.JFrame {
         Jlabel_titulo1.setForeground(new java.awt.Color(0, 0, 0));
         Jlabel_titulo1.setText("Biblioteca Virtual Fray Ignacio Mariño");
         getContentPane().add(Jlabel_titulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, 340, 50));
+
+        jLabel_5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel_5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel_5.setText("Facebook/ linkedin / Instagram ");
+        getContentPane().add(jLabel_5, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 150, 190, 20));
         getContentPane().add(jlabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 250));
 
         pack();
@@ -114,6 +120,7 @@ public class Info extends javax.swing.JFrame {
     private javax.swing.JLabel Jlabel_titulo1;
     private javax.swing.JLabel jLabel_1;
     private javax.swing.JLabel jLabel_4;
+    private javax.swing.JLabel jLabel_5;
     private javax.swing.JLabel jlabel_footer;
     private javax.swing.JLabel jlabel_wallpaper;
     // End of variables declaration//GEN-END:variables

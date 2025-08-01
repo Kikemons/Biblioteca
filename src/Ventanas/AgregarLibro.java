@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 public class AgregarLibro extends javax.swing.JFrame {
 
     public static int id_libro = 0;
-    int valido = 0;
+    int cant;
 
     public AgregarLibro() {
         initComponents();
@@ -26,7 +26,7 @@ public class AgregarLibro extends javax.swing.JFrame {
 
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
-            ImageIcon wallpaper = new ImageIcon();
+            ImageIcon wallpaper = new ImageIcon(url);
             Icon fondo = new ImageIcon(wallpaper.getImage().getScaledInstance(jLabel_wallpaper.getWidth(),
                     jLabel_wallpaper.getHeight(), Image.SCALE_AREA_AVERAGING));
             jLabel_wallpaper.setIcon(fondo);
@@ -38,7 +38,7 @@ public class AgregarLibro extends javax.swing.JFrame {
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
-        if (url!=null) {
+        if (url != null) {
             Image retValue = Toolkit.getDefaultToolkit().getImage(url);
             return retValue;
         }
@@ -128,7 +128,7 @@ public class AgregarLibro extends javax.swing.JFrame {
         jLabel7.setText("Estado:");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, -1, -1));
 
-        Cmb_categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LITERATURA", "NOVELA", "CUENTO " }));
+        Cmb_categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GENERALES", "FILOSOFIA", "RELIGION", "SOCIALES", "NUMEROS", "INGENIERIA", "GEOGRAFIA", "NOVELA", "POESIA", "CUENTO" }));
         getContentPane().add(Cmb_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 190, 40));
         getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, 470));
 
@@ -140,36 +140,46 @@ public class AgregarLibro extends javax.swing.JFrame {
         autor = txt_autor.getText().trim();
         nombre = txt_nombre.getText().trim();
         cantidad = txt_cantidad.getText().trim();
+        boolean  valido = true;
 
         if (autor.equals("")) {
             txt_autor.setBackground(Color.red);
-            valido++;
+            valido=false;
         }
         if (nombre.equals("")) {
             txt_nombre.setBackground(Color.red);
-            valido++;
+            valido=false;
         }
         if (cantidad.equals("")) {
             txt_cantidad.setBackground(Color.red);
-            valido++;
+            valido=false;
         }
+        
+        try {
+              cant=Integer.parseInt(cantidad);
+        } catch (NumberFormatException e) {
+           txt_cantidad.setBackground(Color.red);
+            valido=false;
+        }
+        
 
         //validamos que el libro a ingresar no este ingresado
         try {
             try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst = cn.prepareStatement("select Nombre from libro where nombre=?");
-                pst.setString(1, nombre);
-                ResultSet rs = pst.executeQuery();
-                if (!rs.next()) {
-                    if (valido == 0) {
+                if (valido ) {
+                    PreparedStatement pst = cn.prepareStatement("select Nombre from libro where nombre=?");
+                    pst.setString(1, nombre);
+                    ResultSet rs = pst.executeQuery();
+                    if (!rs.next()) {
+
                         try {
                             try (Connection cn2 = Conexion.conectar()) {
                                 PreparedStatement pst2 = cn2.prepareStatement("Insert into Libro values (?,?,?,?,?,?,?)");
                                 pst2.setInt(1, 0);
-                                pst2.setString(2, nombre);
-                                pst2.setString(3, autor);
+                                pst2.setString(2, nombre.toUpperCase());
+                                pst2.setString(3, autor.toUpperCase());
                                 pst2.setString(4, Cmb_categoria.getSelectedItem().toString());
-                                pst2.setString(5, cantidad);
+                                pst2.setInt(5, cant);
                                 pst2.setString(6, cmb_estado.getSelectedItem().toString());
                                 pst2.setString(7, null);
                                 pst2.executeUpdate();
@@ -179,19 +189,22 @@ public class AgregarLibro extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(null, "El registro del Nuevo libro fue exitoso!!");
 
                         } catch (SQLException e) {
-                            System.err.println("error al guardar el nuevo libro: " + e);
+                            JOptionPane.showMessageDialog(null, "Error al guardar el nuevo libro!");
+                            System.err.println("error al agregar libro "+e);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Complete los datos del libro");
+                        JOptionPane.showMessageDialog(null, "El libro ya esta registrado!");
                         limpiar();
                     }
-
                 } else {
-                    JOptionPane.showMessageDialog(null, "El libro ya esta registrado!");
+                    JOptionPane.showMessageDialog(null, "Complete los datos del libro");
+                    limpiar();
+                    txt_cantidad.setText("");
+                    txt_cantidad.requestFocus();
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error a la hora de busscar el libbro " + e);
+            JOptionPane.showMessageDialog(null,"Error a la hora de buscar el libro " );
         }
 
 

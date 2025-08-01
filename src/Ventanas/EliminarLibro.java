@@ -1,6 +1,7 @@
 package Ventanas;
 
 import Clases.Conexion;
+import java.awt.Color;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -11,9 +12,8 @@ import javax.swing.JOptionPane;
 
 public class EliminarLibro extends javax.swing.JFrame {
 
-    public static int id_libro = 0;
-    String estadoLibroBase;
-    public static String estadoLibro;
+    private int id_libro;
+    public static String estadoLibro = "";
 
     public EliminarLibro() {
         initComponents();
@@ -33,9 +33,36 @@ public class EliminarLibro extends javax.swing.JFrame {
             this.repaint();
         }
 
+        consultarLibro();
+
+    }
+
+    @Override
+    public Image getIconImage() {
+        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
+        if (url != null) {
+            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
+            return retValue;
+        }
+        return null;
+    }
+
+    public void Limpiar() {
+        txt_categoria.setBackground(Color.white);
+        txt_cantidad.setBackground(Color.white);
+        txt_nombre.setBackground(Color.white);
+
+        txt_categoria.setText("");
+        txt_nombre.setText("");
+        txt_cantidad.setText("");
+
+    }
+
+    public void consultarLibro() {
         try {
             try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst = cn.prepareStatement("select * from Libro where id=" + id_libro);
+                PreparedStatement pst = cn.prepareStatement("select * from Libro where id=?");
+                pst.setInt(1, id_libro);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
                     txt_nombre.setText(rs.getString("Nombre"));
@@ -44,23 +71,13 @@ public class EliminarLibro extends javax.swing.JFrame {
                     txt_id.setText(rs.getString("id"));
                     txt_categoria.setText(rs.getString("Categoria"));
                     cmb_estado.setSelectedItem(rs.getString("Estado"));
-                    estadoLibroBase = rs.getString("Estado");
+                    estadoLibro = rs.getString("Estado");
+                    cn.close();
                 }
             }
         } catch (SQLException e) {
             System.err.println("error a la hora de consultar los datos del libro: " + e);
         }
-
-    }
-
-      @Override
-    public Image getIconImage() {
-        URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
-        if (url != null) {
-            Image retValue = Toolkit.getDefaultToolkit().getImage(url);
-            return retValue;
-        }
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -75,7 +92,6 @@ public class EliminarLibro extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jlabel_footer = new javax.swing.JLabel();
         txt_nombre = new javax.swing.JTextField();
-        txt_autor = new javax.swing.JTextField();
         txt_categoria = new javax.swing.JTextField();
         txt_cantidad = new javax.swing.JTextField();
         cmb_estado = new javax.swing.JComboBox<>();
@@ -83,6 +99,7 @@ public class EliminarLibro extends javax.swing.JFrame {
         txt_id = new javax.swing.JTextField();
         btt_eliminar = new javax.swing.JButton();
         btt_actualizar = new javax.swing.JButton();
+        txt_autor = new javax.swing.JTextField();
         jLabel_wallpaper = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -125,16 +142,13 @@ public class EliminarLibro extends javax.swing.JFrame {
         txt_nombre.setEditable(false);
         getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 278, 36));
 
-        txt_autor.setEditable(false);
-        getContentPane().add(txt_autor, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 278, 36));
-
         txt_categoria.setEditable(false);
         getContentPane().add(txt_categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 278, 36));
 
         txt_cantidad.setEditable(false);
         getContentPane().add(txt_cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 220, 278, 36));
 
-        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin prestar", "Prestado" }));
+        cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SIN PRESTAR", "PRESTADO" }));
         getContentPane().add(cmb_estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 120, 160, 36));
 
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -162,6 +176,9 @@ public class EliminarLibro extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btt_actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 320, 100, 40));
+
+        txt_autor.setEditable(false);
+        getContentPane().add(txt_autor, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 278, 36));
         getContentPane().add(jLabel_wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, 470));
 
         pack();
@@ -172,11 +189,13 @@ public class EliminarLibro extends javax.swing.JFrame {
 
         if (seleccion == 0) {
             try {
-                Connection cn2 = Conexion.conectar();
-                PreparedStatement pst2 = cn2.prepareStatement("delete from Libro where id=" + id_libro);
-                pst2.executeUpdate();
+                try (Connection cn2 = Conexion.conectar()) {
+                    PreparedStatement pst2 = cn2.prepareStatement("delete from Libro where id=?");
+                    pst2.setInt(1, id_libro);
+                    pst2.executeUpdate();
 
-                JOptionPane.showMessageDialog(null, "El libro fue eliminado exitosamente!");
+                    JOptionPane.showMessageDialog(null, "El libro fue eliminado exitosamente!");
+                }
             } catch (SQLException e) {
                 System.err.println("error al borrar el libro: " + e);
             }
@@ -187,13 +206,15 @@ public class EliminarLibro extends javax.swing.JFrame {
     }//GEN-LAST:event_btt_eliminarActionPerformed
 
     private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
-        //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro
-        if (!estadoLibroBase.equals(cmb_estado.getSelectedItem().toString())) {
-            estadoLibro=cmb_estado.getSelectedItem().toString();
+        //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro          
+
+        if (!estadoLibro.equals(cmb_estado.getSelectedItem().toString())) {
+            estadoLibro = cmb_estado.getSelectedItem().toString();
             agregarUserLibro aUser = new agregarUserLibro();
             aUser.setVisible(true);
             this.dispose();
         }
+
 
     }//GEN-LAST:event_btt_actualizarActionPerformed
 

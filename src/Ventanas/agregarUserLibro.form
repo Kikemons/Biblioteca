@@ -219,9 +219,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JTextField" name="txt_nombreLibro">
-      <Properties>
-        <Property name="editable" type="boolean" value="false"/>
-      </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="370" y="120" width="278" height="36"/>
@@ -229,9 +226,6 @@
       </Constraints>
     </Component>
     <Component class="javax.swing.JTextField" name="txt_autor">
-      <Properties>
-        <Property name="editable" type="boolean" value="false"/>
-      </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="370" y="220" width="278" height="36"/>
@@ -251,16 +245,6 @@
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="370" y="190" width="-1" height="-1"/>
-        </Constraint>
-      </Constraints>
-    </Component>
-    <Component class="javax.swing.JTextField" name="txt_categoria">
-      <Properties>
-        <Property name="editable" type="boolean" value="false"/>
-      </Properties>
-      <Constraints>
-        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="370" y="320" width="278" height="36"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -286,7 +270,7 @@
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="380" y="410" width="87" height="36"/>
+          <AbsoluteConstraints x="370" y="410" width="87" height="36"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -302,7 +286,7 @@
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="380" y="380" width="-1" height="-1"/>
+          <AbsoluteConstraints x="370" y="380" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -310,8 +294,8 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="2">
-            <StringItem index="0" value="Sin prestar"/>
-            <StringItem index="1" value="Prestado"/>
+            <StringItem index="0" value="SIN PRESTAR"/>
+            <StringItem index="1" value="PRESTADO"/>
           </StringArray>
         </Property>
       </Properties>
@@ -383,6 +367,32 @@
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="550" y="40" width="130" height="40"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="Cmb_categoria">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="10">
+            <StringItem index="0" value="GENERALES"/>
+            <StringItem index="1" value="FILOSOFIA"/>
+            <StringItem index="2" value="RELIGION"/>
+            <StringItem index="3" value="SOCIALES"/>
+            <StringItem index="4" value="NUMEROS"/>
+            <StringItem index="5" value="INGENIERIA"/>
+            <StringItem index="6" value="GEOGRAFIA"/>
+            <StringItem index="7" value="NOVELA"/>
+            <StringItem index="8" value="POESIA"/>
+            <StringItem index="9" value="CUENTO"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="370" y="320" width="190" height="40"/>
         </Constraint>
       </Constraints>
     </Component>

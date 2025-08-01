@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
 
     public static String user;
+    public static String estatus;
     boolean valido;
 
     public Login() {
@@ -93,26 +94,26 @@ public class Login extends javax.swing.JFrame {
         if (valido == true) {
             try {
                 //hacemos la consulta del estado del usuario para redirigirlo a la interfaz que corresponde
-                String user = txt_user.getText().trim();
+                String usuario = txt_user.getText().trim();
                 String pass = txt_password.getText().trim();
                 try (Connection cn = Conexion.conectar()) {
                     PreparedStatement pst = cn.prepareStatement("select estatus from useradmin where user=? and password=?");
-                    pst.setString(1, user);
+                    pst.setString(1, usuario);
                     pst.setString(2, pass);
                     ResultSet rs = pst.executeQuery();
 
                     if (rs.next()) {
-                        String estatus = rs.getString("estatus");
-
+                        estatus = rs.getString("estatus");
+                        user=usuario+", "+estatus;
                         switch (estatus) {
                             case "Admin" -> {
                                 Menu menu = new Menu();
-                                menu.setVisible(true);
+                                menu.setVisible(true);                               
                                 dispose();
                             }
                             case "User" -> {
                                 menuUser meUser = new menuUser();
-                                meUser.setVisible(true);
+                                meUser.setVisible(true);                                
                                 dispose();
                             }
                         }
