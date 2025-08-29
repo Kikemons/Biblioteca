@@ -43,6 +43,7 @@ public class EstadoLibro extends javax.swing.JFrame {
                     txt_cantidad.setText(rs.getString("Ejemplares"));
                     txt_id.setText(rs.getString("id"));
                     txt_categoria.setText(rs.getString("Categoria"));
+                    System.out.println("estado "+rs.getString("Estado"));
                     cmb_estado.setSelectedItem(rs.getString("Estado"));
                     estadoLibro = rs.getString("Estado");
                 } else {

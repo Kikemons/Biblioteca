@@ -2,6 +2,7 @@ package Ventanas;
 
 import Clases.Conexion;
 import java.awt.Color;
+import java.awt.HeadlessException;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -14,11 +15,12 @@ import javax.swing.JScrollPane;
 public class agregarUserLibro extends javax.swing.JFrame {
 
     public static int id_libro;
+    int id_usuario;
     String estatus;
     boolean valido;
     String estadoLibro;
-    int telefono;
-    int identidad;
+    Long telefono;
+    Long identidad;
 
     public agregarUserLibro() {
         initComponents();
@@ -49,19 +51,25 @@ public class agregarUserLibro extends javax.swing.JFrame {
         //arreglamos el textArea
         jScrollPane2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        txt_observaciones.setLineWrap(true);
+        txt_observaciones.setWrapStyleWord(true);
 
         //hacemos una consulta para buscar los datos del libro
         try {
             try (Connection cn = Conexion.conectar()) {
-                PreparedStatement pst = cn.prepareStatement("select * from Libro where id=?");
+                PreparedStatement pst = cn.prepareStatement("SELECT p.id, u.Nombres, u.Apellidos, u.Identidad, u.Telefono, "
+                        + " p.estado "
+                        + "FROM prestamos p "
+                        + "INNER JOIN usuario u ON p.id_usuario = u.id "
+                        + "INNER JOIN libro l ON p.id_libro = l.id "
+                        + "WHERE p.id_libro = ?");
                 pst.setInt(1, id_libro);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
-                    txt_id.setText(rs.getString("id"));
-                    txt_nombreLibro.setText(rs.getString("nombre"));
-                    txt_autor.setText(rs.getString("autor"));
-                    Cmb_categoria.setSelectedItem(rs.getString("categoria"));
-                    cmb_estado.setSelectedItem(estadoLibro);
+                    txt_Identidad.setText(rs.getString("Identidad"));
+                    txt_Telefono.setText(rs.getString("Telefono"));
+                    txt_apellido.setText(rs.getString("Apellidos"));
+                    txt_nombre.setText(rs.getString("Nombres"));
                     cn.close();
                 }
             }
@@ -69,25 +77,25 @@ public class agregarUserLibro extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("error " + e);
             JOptionPane.showMessageDialog(null, "Error al consultar los datos del libro!");
+            System.err.println("Error " + e);
         }
         try {
-            try (Connection cn2 = Conexion.conectar()) {
-                PreparedStatement pst2 = cn2.prepareCall("select * from usuario where IdLibro=?");
-                pst2.setInt(1, id_libro);
-                ResultSet rs = pst2.executeQuery();
+            try (Connection cn = Conexion.conectar()) {
+                PreparedStatement pst = cn.prepareStatement("select * from Libro where id=?");
+                pst.setInt(1, id_libro);
+                ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
-                    txt_Identidad.setText(rs.getString("Identidad"));
-                    txt_Telefono.setText(rs.getString("Telefono"));
-                    txt_apellido.setText(rs.getString("Apellidos"));
+                    txt_nombreLibro.setText(rs.getString("Nombre"));
+                    txt_autor.setText(rs.getString("Autor"));
+                    txt_id.setText(rs.getString("id"));
+                    Cmb_categoria.setSelectedItem(rs.getString("Categoria"));
+                    cmb_estado.setSelectedItem(estadoLibro);
                     txt_observaciones.setText(rs.getString("Observacion"));
-                    txt_nombre.setText(rs.getString("Nombres"));
-
-                    cn2.close();
+                    cn.close();
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al consultar los datos del usuario! +e");
-            JOptionPane.showMessageDialog(null, "Error al consultar los datos del usuario! " + e);
+            System.err.println("error a la hora de consultar los datos del libro: " + e);
         }
 
     }
@@ -148,10 +156,10 @@ public class agregarUserLibro extends javax.swing.JFrame {
         }
 
         try {
-            identidad = Integer.parseInt(txt_Identidad.getText());
-            telefono = Integer.parseInt(txt_Telefono.getText());
-        } catch (NumberFormatException e) {
-            if (identidad < 0 && telefono < 0) {
+            identidad = Long.valueOf(txt_Identidad.getText());
+            telefono = Long.valueOf(txt_Telefono.getText());
+            
+                        if (identidad < 0 && telefono < 0) {
                 txt_Identidad.setBackground(Color.red);
                 JOptionPane.showMessageDialog(null, "Error al digitar el campo Identidad y Telefono");
                 txt_Identidad.setBackground(Color.white);
@@ -175,6 +183,14 @@ public class agregarUserLibro extends javax.swing.JFrame {
                 txt_Telefono.setText("");
                 valido = false;
             }
+        } catch (NumberFormatException e) {
+
+                System.err.println("error "+e);
+                JOptionPane.showMessageDialog(null, "Error al digitar, verifique los campos");
+                txt_Telefono.setText("");
+                txt_Identidad.setText("");
+                valido = false;
+            
         }
 
     }
@@ -334,99 +350,117 @@ public class agregarUserLibro extends javax.swing.JFrame {
         //creamos la consulta consulta para verificar que el usuario no este registrado
         if (valido) {
             try {
+
                 try (Connection cn = Conexion.conectar()) {
                     PreparedStatement pst = cn.prepareStatement("select * from usuario where identidad=?");
-                    pst.setInt(1, identidad);
+                    pst.setLong(1, identidad);
                     ResultSet rs = pst.executeQuery();
-                    if (rs.next()) {
-                        Integer Identidad = Integer.valueOf(rs.getString("Identidad"));
 
+                    if (rs.next()) {
+                        id_usuario = Integer.parseInt(rs.getString("id"));
                         try {
                             try (Connection cn2 = Conexion.conectar()) {
-                                PreparedStatement pst2 = cn2.prepareStatement("update usuario set Observacion=?, IdLibro=? where Identidad=? ");
-                                String estado = cmb_estado.getSelectedItem().toString();
-                                pst2.setString(1, estado + " " + txt_observaciones.getText().toUpperCase());
-                                pst2.setInt(2, Integer.parseInt(txt_id.getText().trim()));
-                                pst2.setInt(3, Identidad);
+                                // Establecer la variable de sesión
+                                if (cmb_estado.getSelectedItem().toString().equals("SIN PRESTAR")) {
+                                    PreparedStatement psSession = cn2.prepareStatement("SET @UsuarioResponsable = ?");
+                                    psSession.setString(1, Login.user);
+                                    psSession.execute();
 
-                                pst2.executeUpdate();
-                                cn2.close();
+                                    PreparedStatement pstt = cn2.prepareStatement("DELETE from prestamos where id_libro=?");
+                                    pstt.setInt(1, id_libro);
+                                    pstt.executeUpdate();
+                                    System.out.println("entrego el libro");
+
+                                } else {
+                                    PreparedStatement psSession = cn2.prepareStatement("SET @UsuarioResponsable = ? ");
+                                    System.out.println("usuario "+Login.user);
+                                    psSession.setString(1, Login.user);
+                                    psSession.execute();
+
+                                    PreparedStatement pst2 = cn2.prepareStatement("INSERT INTO prestamos (id_usuario, id_libro, fecha_prestamo, estado, Observacion) VALUES (?, ?, CURDATE(), ?, ?)");
+                                    pst2.setInt(1, id_usuario); // obtén este ID de la consulta de usuario
+                                    pst2.setInt(2, id_libro);    // obtenido del formulario
+                                    pst2.setString(3, cmb_estado.getSelectedItem().toString());
+                                    pst2.setString(4, cmb_estado.getSelectedItem().toString() + " " + txt_observaciones.getText().trim().toUpperCase());
+                                    pst2.executeUpdate();
+                                    System.out.println("ingreso el libro");
+
+                                }
 
                             }
+
                         } catch (SQLException e) {
-                            System.err.println("error al ingresar el usuario a la base de datos " + e);
+                            /* creamos el mensaje de advertencia cuando se crea una excepcion o error al ingresar usuario en la base de datos */
+                            //OptionPane.showMessageDialog(null, "error al ingresar el usuario a la base de datos, contacte con el administrador!! ");
+                            System.err.println("Error " + e);
                         }
                     } //hacemos el ingreso del nuevo usuario
                     else {
                         try {
                             // Establecer la variable de sesión
-                            try (Connection c = Conexion.conectar() // Una sola conexión
-                                    ) {
-                                // Establecer la variable de sesión
-                                PreparedStatement psSession = c.prepareStatement("SET @UsuarioResponsable = ?");
+                            try (Connection c = Conexion.conectar()) {
+                                PreparedStatement psSession = c.prepareStatement("SET @UsuarioResponsable = ? ");
                                 psSession.setString(1, Login.user);
                                 psSession.execute();
-
                                 // Insertar el usuario (esto activa el trigger)
-                                PreparedStatement pst2 = c.prepareStatement("INSERT INTO usuario VALUES (?,?,?,?,?,?,?)");
+                                PreparedStatement pst2 = c.prepareStatement("INSERT INTO usuario VALUES (?,?,?,?,?,?)");
                                 pst2.setInt(1, 0);
                                 pst2.setString(2, txt_nombre.getText().trim().toUpperCase());
                                 pst2.setString(3, txt_apellido.getText().trim().toUpperCase());
                                 pst2.setLong(4, Long.parseLong(txt_Identidad.getText().trim()));
                                 pst2.setLong(5, Long.parseLong(txt_Telefono.getText().trim()));
                                 pst2.setString(6, "USUARIO CREADO");
-                                pst2.setInt(7, id_libro); // o elimina esta columna si no se usa
 
                                 pst2.executeUpdate();
+
                             }
                             dispose();
 
                         } catch (SQLException e) {
                             System.err.println("Error al ingresar el usuario a la base de datos: " + e);
                         }
-                        cn.close();
+
+                        //
+                        try (Connection cn3 = Conexion.conectar()) {
+                            PreparedStatement pst3 = cn3.prepareStatement("select * from usuario where identidad=?");
+                            pst3.setLong(1, identidad);
+                            ResultSet rs3 = pst3.executeQuery();
+                            if (rs3.next()) {
+                                id_usuario = rs3.getInt("id");
+
+                            }
+
+                        } catch (SQLException e) {
+                            System.err.println("error al actualizar el estado del libro" + e);
+                        }
+
+                        //
+                        try {
+                            try (Connection conexion = Conexion.conectar()) {
+                                PreparedStatement psSession = conexion.prepareStatement("SET @UsuarioResponsable = ? ");
+                                psSession.setString(1, Login.user);
+                                psSession.execute();
+                                
+                                PreparedStatement preparedStatement = conexion.prepareStatement("INSERT INTO prestamos (id_usuario, id_libro, fecha_prestamo, estado, Observacion) VALUES (?, ?, CURDATE(), ?, ?)");
+                                preparedStatement.setInt(1, id_usuario); // obtén este ID de la consulta de usuario
+                                preparedStatement.setInt(2, id_libro);    // obtenido del formulario
+                                preparedStatement.setString(3, cmb_estado.getSelectedItem().toString());
+                                preparedStatement.setString(4, cmb_estado.getSelectedItem().toString() + " " + txt_observaciones.getText().trim().toUpperCase());
+                                preparedStatement.executeUpdate();
+                            }
+
+                        } catch (SQLException e) {
+                            System.err.println("error al actualizar el estado del libro" + e);
+                        }
                     }
                 }
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "error a la hora de consultar los datos el id del usuario ");
+                System.err.println("errorrr " + e);
             }
 
             dispose();
 
-            try {
-                try (Connection conexion = Conexion.conectar()) {
-                    PreparedStatement psSession = conexion.prepareStatement("SET @UsuarioResponsable = ?");
-                    psSession.setString(1, Login.user);
-                    System.out.println("el user es: " + Login.user);
-                    psSession.execute();
-
-                    PreparedStatement preparedStatement = conexion.prepareStatement("update libro set Estado=?, Nombre=?, Autor=?, Observacion=? where Id=?");
-                    preparedStatement.setString(1, cmb_estado.getSelectedItem().toString());
-                    preparedStatement.setString(2, txt_nombreLibro.getText().trim().toUpperCase());
-                    preparedStatement.setString(3, txt_autor.getText().trim().toUpperCase());
-                    preparedStatement.setString(4, txt_observaciones.getText().toUpperCase());
-                    preparedStatement.setInt(5, id_libro);
-                    preparedStatement.executeUpdate();
-                    conexion.close();
-                }
-            } catch (SQLException e) {
-                System.err.println("error al actualizar el estado del libro");
-            }
-            // pendiente para reviion
-
-            try {
-                if (cmb_estado.getSelectedItem().toString().equals("SIN PRESTAR")) {
-                    try (Connection cn = Conexion.conectar()) {
-
-                        PreparedStatement pst = cn.prepareStatement("update usuario set Observacion=?, IdLibro=null where Identidad=?");
-                        pst.setString(1, "");
-                        pst.setInt(2, identidad);
-                        pst.executeUpdate();
-                    }
-                }
-            } catch (SQLException e) {
-                System.err.println("error a la hora de actualizar la observacion del usuario " + e);
-            }
         }
 
 
@@ -437,7 +471,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
             String texto = JOptionPane.showInputDialog("Ingrese el numero de identidad del usuario");
 
             if (texto != null) {
-                Integer identificacion = Integer.parseInt(texto);
+                Integer identificacion = Integer.valueOf(texto);
                 Connection cn = Conexion.conectar();
                 PreparedStatement pst = cn.prepareStatement("select * from usuario where Identidad=?");
                 pst.setInt(1, identificacion);
@@ -451,7 +485,7 @@ public class agregarUserLibro extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Usuario no registrado");
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | NumberFormatException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Ingrese valores validos");
 
         }

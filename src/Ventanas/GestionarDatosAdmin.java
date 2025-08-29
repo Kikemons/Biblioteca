@@ -1,6 +1,7 @@
 package Ventanas;
 
 import Clases.Conexion;
+import java.awt.HeadlessException;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -49,7 +50,6 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
         model.addColumn("Usuario");
         model.addColumn("Estatus");
 
-        TableColumnModel columnModel = JTable_consulta.getColumnModel();
 
         //agregamos accion al cmb_buscar
         try {
@@ -72,6 +72,7 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
         
 
         JTable_consulta.addMouseListener(new MouseAdapter() {
+        @Override
         public void mouseClicked(MouseEvent e){
             int fila_point=JTable_consulta.rowAtPoint(e.getPoint());
             int columna=0;
@@ -168,7 +169,7 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_agregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_agregarLibroActionPerformed
-        AgregarUsuario aggUser = new AgregarUsuario();
+        AgregarUsuarioAdmin aggUser = new AgregarUsuarioAdmin();
         aggUser.setVisible(true);
         dispose();
     }//GEN-LAST:event_btt_agregarLibroActionPerformed
@@ -183,7 +184,7 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
             pst.executeUpdate();
              JOptionPane.showMessageDialog(null, "El Usuario fue eliminado exitosamente!");
              this.dispose();
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, "error al eliminar el usuario ");
                 System.err.println("error al eliminar libro "+e);
         }

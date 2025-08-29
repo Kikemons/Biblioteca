@@ -51,7 +51,7 @@ public class Menu extends javax.swing.JFrame {
         Jlabel_consulta = new javax.swing.JLabel();
         jlabel_info = new javax.swing.JLabel();
         jlabel_baseD = new javax.swing.JLabel();
-        btt_Historial = new javax.swing.JButton();
+        btt_Usuarios = new javax.swing.JButton();
         jlabel_info1 = new javax.swing.JLabel();
         jlabel_wallpaper = new javax.swing.JLabel();
 
@@ -100,26 +100,26 @@ public class Menu extends javax.swing.JFrame {
         Jlabel_consulta.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         Jlabel_consulta.setForeground(new java.awt.Color(255, 255, 255));
         Jlabel_consulta.setText("Administrar Usuario Admin");
-        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 230, -1, -1));
+        getContentPane().add(Jlabel_consulta, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 230, -1, -1));
 
         jlabel_info.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jlabel_info.setForeground(new java.awt.Color(255, 255, 255));
-        jlabel_info.setText("Historial de usuario");
-        getContentPane().add(jlabel_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 230, -1, -1));
+        jlabel_info.setText("Usuario registrados");
+        getContentPane().add(jlabel_info, new org.netbeans.lib.awtextra.AbsoluteConstraints(592, 230, -1, -1));
 
         jlabel_baseD.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jlabel_baseD.setForeground(new java.awt.Color(255, 255, 255));
         jlabel_baseD.setText("Gestionar Datos");
         getContentPane().add(jlabel_baseD, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
 
-        btt_Historial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/historial.png"))); // NOI18N
-        btt_Historial.setBorder(null);
-        btt_Historial.addActionListener(new java.awt.event.ActionListener() {
+        btt_Usuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/historial.png"))); // NOI18N
+        btt_Usuarios.setBorder(null);
+        btt_Usuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btt_HistorialActionPerformed(evt);
+                btt_UsuariosActionPerformed(evt);
             }
         });
-        getContentPane().add(btt_Historial, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 80, 140, 140));
+        getContentPane().add(btt_Usuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 80, 140, 140));
 
         jlabel_info1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jlabel_info1.setForeground(new java.awt.Color(255, 255, 255));
@@ -145,10 +145,10 @@ public class Menu extends javax.swing.JFrame {
         agg.setVisible(true);
     }//GEN-LAST:event_btt_infoActionPerformed
 
-    private void btt_HistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_HistorialActionPerformed
-        HistorialUsuario HU= new HistorialUsuario();
-        HU.setVisible(true);
-    }//GEN-LAST:event_btt_HistorialActionPerformed
+    private void btt_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_UsuariosActionPerformed
+        Usuarios user= new Usuarios();
+        user.setVisible(true);
+    }//GEN-LAST:event_btt_UsuariosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -188,7 +188,7 @@ public class Menu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Jlabel_consulta;
     private javax.swing.JLabel Jlabel_titulo;
-    private javax.swing.JButton btt_Historial;
+    private javax.swing.JButton btt_Usuarios;
     private javax.swing.JButton btt_consulta;
     private javax.swing.JButton btt_info;
     private javax.swing.JButton btt_libros;
