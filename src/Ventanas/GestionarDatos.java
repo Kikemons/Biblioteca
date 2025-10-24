@@ -21,19 +21,22 @@ import javax.swing.table.TableColumnModel;
  * @author monsalve
  */
 public class GestionarDatos extends javax.swing.JFrame {
-
+    //variables que se van a utilizar de manera local y entre interfaces
     private final DefaultTableModel model = new DefaultTableModel();
     private static String buscar = "Nombre";
     public static int id_libro = 0;
-
+    
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public GestionarDatos() {
         initComponents();
-        setTitle("Biblioteca📚 - Gestionar Datos");
+        setTitle("Biblioteca📚 - Gestionar Datos del libros");
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setSize(805, 516);
-
+        
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
+        
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -42,12 +45,12 @@ public class GestionarDatos extends javax.swing.JFrame {
             jlabel_wallpaper.setIcon(Icono);
             this.repaint();
         }
-
+        
+        //se creo el scroll de la tabla
         jTable_consulta = new JTable(model);
         jScrollPane_consulta.setViewportView(jTable_consulta);
         
-        
-
+        //se definiron los titulos de las columnas
         model.addColumn("Id");
         model.addColumn("Nombre");
         model.addColumn("Autor");
@@ -56,8 +59,8 @@ public class GestionarDatos extends javax.swing.JFrame {
 
         TableColumnModel columnModel = jTable_consulta.getColumnModel();
 
+        //se definio el ancho de las columnas
         columnModel.getColumn(0).setMaxWidth(40);
-
         columnModel.getColumn(4).setMinWidth(0);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(3).setMinWidth(100);
@@ -66,24 +69,20 @@ public class GestionarDatos extends javax.swing.JFrame {
         columnModel.getColumn(2).setMaxWidth(200);
         columnModel.getColumn(2).setMinWidth(200);
 
-        //agregamos accion al cmb_buscar
+        //agregamos accion al cmb_buscar para ajustar la busqueda
         cmb_buscar.addActionListener((ActionEvent e) -> {
             buscar = cmb_buscar.getSelectedItem().toString();
 
             switch (buscar) {
-                case "Nombre" ->
-                    jlabel_buscar.setText("Ingrese el nombre del libro que desea eliminar:");
-                case "Autor" ->
-                    jlabel_buscar.setText("Ingrese el Autor del libro que desea eliminar:");
-                case "Categoria" ->
-                    jlabel_buscar.setText("Ingrese la categoria del libro que desea eliminar:");
-                case "Estado" ->
-                    jlabel_buscar.setText("Ingrese estado del libro que desea buscar (Prestado/Sin prestar):");
-                default -> {
-                }
+                case "Nombre" ->jlabel_buscar.setText("Ingrese el nombre del libro que desea eliminar:");
+                case "Autor" ->jlabel_buscar.setText("Ingrese el Autor del libro que desea eliminar:");
+                case "Categoria" ->jlabel_buscar.setText("Ingrese la categoria del libro que desea eliminar:");
+                case "Estado" ->jlabel_buscar.setText("Ingrese estado del libro que desea buscar (Prestado/Sin prestar):");
+
             }
         });
-
+        
+        //creamos el metodo para presional el boton con la acion demla tecla enter
         txt_nombre.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -93,7 +92,7 @@ public class GestionarDatos extends javax.swing.JFrame {
             }
         });
 
-        //agregamos el evento a la selecion de la tabla
+        //agregamos el evento a la selecion de la tabla para poder selecionar el libro
         jTable_consulta.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -110,7 +109,7 @@ public class GestionarDatos extends javax.swing.JFrame {
         });
 
     }
-
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -206,30 +205,33 @@ public class GestionarDatos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btt_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_buscarActionPerformed
-        // TODO add your handling code here:
-
+        // 
+        /*se realiza la siguiente consulta si el usuario no ingreso ningun texto de busqueda
+        (busqueda de toda la base de datos en general)*/
         model.setRowCount(0);
         String texto = txt_nombre.getText().trim();
         if (buscar.equals("Nombre") & txt_nombre.getText().trim().equals("")) {
 
             try {
-                Connection cn = Conexion.conectar();
-                PreparedStatement pst = cn.prepareStatement("select id, nombre, Autor, Categoria, Estado from libro");
-                ResultSet rs = pst.executeQuery();
-
-                while (rs.next()) {
-                    Object[] fila = new Object[5];
-                    for (int i = 0; i < 5; i++) {
-                        fila[i] = rs.getObject(i + 1);
+                try (Connection cn = Conexion.conectar()) {
+                    PreparedStatement pst = cn.prepareStatement("select id, nombre, Autor, Categoria, Estado from libro");
+                    ResultSet rs = pst.executeQuery();
+                    
+                    while (rs.next()) {
+                        Object[] fila = new Object[5];
+                        for (int i = 0; i < 5; i++) {
+                            fila[i] = rs.getObject(i + 1);
+                        }
+                        model.addRow(fila);
                     }
-                    model.addRow(fila);
                 }
-                cn.close();
 
             } catch (SQLException e) {
                 System.err.println("error al imprimr datos en tabla " + e);
             }
 
+             /*se realiza la siguiente consulta si el usuario ingreso texto de busqueda
+        (busqueda del nombre del libro que contenga el texto que se introdujo en la pestaña de busqueda)*/
         } else if (buscar.equals("Nombre") & !txt_nombre.getText().trim().equals("")) {
             model.setRowCount(0);
             try {
@@ -247,6 +249,9 @@ public class GestionarDatos extends javax.swing.JFrame {
             } catch (SQLException e) {
                 System.err.println("error al buscar libro por nombre: " + e);
             }
+            
+            /*se realiza la siguiente consulta si el usuario ingreso texto de busqueda
+        (busqueda del nombre del autor que contenga el texto que se introdujo en la pestaña de busqueda)*/
         } else if (buscar.equals("Autor")) {
             model.setRowCount(0);
             try {
@@ -265,6 +270,8 @@ public class GestionarDatos extends javax.swing.JFrame {
                 System.err.println("error al buscar libro por Autor: " + e);
             }
 
+            /*se realiza la siguiente consulta si el usuario ingreso texto de busqueda
+        (busqueda del nombre del estado que contenga el texto que se introdujo en la pestaña de busqueda)*/
         } else if (buscar.equals("Estado")) {
              try {
                 Connection cn = Conexion.conectar();
@@ -283,6 +290,10 @@ public class GestionarDatos extends javax.swing.JFrame {
                 System.err.println("error al buscar libro por Estado: " + e);
             }
         }else {
+            
+            
+        /*se realiza la siguiente consulta si el usuario ingreso texto de busqueda
+        (busqueda de  la categoria que contenga el texto que se introdujo en la pestaña de busqueda)*/
             model.setRowCount(0);
             try {
                 Connection cn = Conexion.conectar();
@@ -306,7 +317,8 @@ public class GestionarDatos extends javax.swing.JFrame {
     private void cmb_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_buscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmb_buscarActionPerformed
-
+    
+    //si se presiona el botton se reirecciona el usuario a otro apartado
     private void btt_agregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_agregarLibroActionPerformed
         AgregarLibro agregarLibro = new AgregarLibro();
         agregarLibro.setVisible(true);
@@ -364,10 +376,8 @@ public class GestionarDatos extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GestionarDatos().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new GestionarDatos().setVisible(true);
         });
     }
 

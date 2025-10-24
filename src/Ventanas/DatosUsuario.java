@@ -7,23 +7,26 @@ import java.awt.Toolkit;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 public class DatosUsuario extends javax.swing.JFrame {
 
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public DatosUsuario() {
         initComponents();
-        setTitle("Biblioteca📚 - Agregar usuario Admin");
+        setTitle("Biblioteca📚 - Prestamos usuario");
         setLocationRelativeTo(null);
-
         setResizable(false);
         setSize(879, 519);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-
+        
+        //esta variable trae la informacion del id del usuario seleccionado anterormente
         int idUsuario = Usuarios.idUsuario;
 
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -32,12 +35,11 @@ public class DatosUsuario extends javax.swing.JFrame {
             jLabel_wallpaper.setIcon(fondo);
             this.repaint();
         }
-        
-        DefaultTableModel model= new DefaultTableModel();
-        jTablePrestamo= new JTable(model);
+        //se creo el scroll de la tabla
+        DefaultTableModel model = new DefaultTableModel();
+        jTablePrestamo = new JTable(model);
         jScrollPane1.setViewportView(jTablePrestamo);
-        
-        model.addColumn("Id");
+        //se definiron los titulos de las columnas
         model.addColumn("Nombres");
         model.addColumn("Apellidos");
         model.addColumn("Titulo");
@@ -45,45 +47,47 @@ public class DatosUsuario extends javax.swing.JFrame {
         model.addColumn("Autor");
         model.addColumn("Estado");
         model.addColumn("Observacion");
-        
-        TableColumnModel tabla= jTablePrestamo.getColumnModel();
-        tabla.getColumn(0).setMaxWidth(50);
 
+        TableColumnModel tabla = jTablePrestamo.getColumnModel();
+        //tabla.getColumn(0).setMaxWidth(50);
+        
+        //se hace una consulta para personalizar el Jframe con el nombre de la persona
         try {
             try (Connection cn = Conexion.conectar()) {
                 PreparedStatement pst = cn.prepareStatement("select * from usuario where id=?");
                 pst.setInt(1, idUsuario);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
-                    Jlabel_titulo.setText("Prestamos relacionados con el usuario " + rs.getString("Nombres"));
+                    Jlabel_titulo.setText("Prestamos de " + rs.getString("Nombres"));
                 }
             }
         } catch (SQLException e) {
-            System.err.println("error " + e);
+            JOptionPane.showMessageDialog(null, "Error contacte con el administrador");
         }
-
+        
+       /*se realiza la consulta de los prestamos realizados al usuario relacionado*/
         try {
             Connection c = Conexion.conectar();
-            PreparedStatement p = c.prepareStatement("SELECT p.id, u.Nombres, u.Apellidos, l.Nombre, l.Categoria, l.Autor, l.Estado,"
+            PreparedStatement p = c.prepareStatement("SELECT u.Nombres, u.Apellidos, l.Nombre, l.Categoria, l.Autor, l.Estado,"
                     + "l.Observacion "
                     + "FROM prestamos p "
                     + "INNER JOIN usuario u ON p.id_usuario = u.id "
                     + "INNER JOIN libro l ON p.id_libro = l.id "
                     + "WHERE p.id_usuario=?");
             p.setInt(1, idUsuario);
-            ResultSet rs=p.executeQuery();
-            while(rs.next()){
-                Object usuario []= new Object[8];
-                for (int i = 0; i < 8; i++) {
-                    usuario[i]=rs.getObject(i+1);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                Object usuario[] = new Object[8];
+                for (int i = 0; i < 7; i++) {
+                    usuario[i] = rs.getObject(i + 1);
                 }
                 model.addRow(usuario);
             }
         } catch (SQLException e) {
-            System.err.println("error al consultar los datos de los libros en prestamo" +e);
+            JOptionPane.showMessageDialog(null, "error al consultar los datos de los libros en prestamo" );
         }
     }
-
+      //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -113,7 +117,7 @@ public class DatosUsuario extends javax.swing.JFrame {
         Jlabel_titulo.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         Jlabel_titulo.setForeground(new java.awt.Color(0, 0, 0));
         Jlabel_titulo.setText("Prestamos relacionados con el usuario");
-        getContentPane().add(Jlabel_titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 390, 30));
+        getContentPane().add(Jlabel_titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 770, 30));
 
         jlabel_footer.setBackground(new java.awt.Color(255, 255, 255));
         jlabel_footer.setForeground(new java.awt.Color(255, 255, 255));

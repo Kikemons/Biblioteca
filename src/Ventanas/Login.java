@@ -18,10 +18,14 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
+    /*Se crean las variables de usuario y estatus las cuales van a guardar los datos del usuario
+    con estas se van identificar al usuario responsable(personal que maneja el software)
+     */
     public static String user;
     public static String estatus;
     boolean valido;
 
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public Login() {
         initComponents();
         setLocationRelativeTo(null);
@@ -30,6 +34,7 @@ public class Login extends javax.swing.JFrame {
         setTitle("Biblioteca📚 - Login");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/logoAlcaldia.png");
         if (url != null) {
             ImageIcon wallpaperLogo = new ImageIcon(url);
@@ -38,6 +43,7 @@ public class Login extends javax.swing.JFrame {
             jlabel_imagen.setIcon(icono);
             this.repaint();
         }
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
 
         URL url2 = getClass().getResource("/Imagenes/fondo.jpg");
         ImageIcon wallpaper = new ImageIcon(url2);
@@ -48,6 +54,7 @@ public class Login extends javax.swing.JFrame {
             this.repaint();
         }
 
+        //se utiliza para no clickear sinno utilizar la tecla del teclado para ingresar
         txt_password.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -59,6 +66,7 @@ public class Login extends javax.swing.JFrame {
 
     }
 
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -69,7 +77,7 @@ public class Login extends javax.swing.JFrame {
         return null;
     }
 
-    //metodo para validar que los campos esten con informacion
+    //metodo para validar que los campos esten con informacion(txt no vacios)
     public void validarText() {
 
         valido = true;
@@ -89,42 +97,44 @@ public class Login extends javax.swing.JFrame {
         }
     }
 
+    /*metodo para hacer la consulta y poder ingresar al menu principal con las credenciales de los admin
+     o userAdmin*/
     private void ingresar() {
         validarText();
-        if (valido == true) {
+        if (valido) {
             try {
                 //hacemos la consulta del estado del usuario para redirigirlo a la interfaz que corresponde
                 String usuario = txt_user.getText().trim();
-                String pass = txt_password.getText().trim();
+                String pass = new String(txt_password.getPassword()).trim();
                 try (Connection cn = Conexion.conectar()) {
                     PreparedStatement pst = cn.prepareStatement("select estatus from useradmin where user=? and password=?");
                     pst.setString(1, usuario);
                     pst.setString(2, pass);
                     ResultSet rs = pst.executeQuery();
 
+                    //dependiendo de su estatus de usuario se abre uno o otro apartado
+                    //limitando funcionalidades a los usuarios con estatus de UserAdmin
                     if (rs.next()) {
                         estatus = rs.getString("estatus");
-                        user=usuario+", "+estatus;
+                        user = usuario + ", " + estatus;
                         switch (estatus) {
                             case "Admin" -> {
-                                Menu menu = new Menu();
-                                menu.setVisible(true);                               
-                                dispose();
+                                new Menu().setVisible(true);
+                                this.dispose();
                             }
                             case "User" -> {
-                                menuUser meUser = new menuUser();
-                                meUser.setVisible(true);                                
-                                dispose();
+                                new menuUser().setVisible(true);
+                                this.dispose();
                             }
                         }
-
+                        /*si no se encuentra el usuario o las credenciales son incorrectas*/
                     } else {
                         txt_password.setText("");
                         txt_user.setText("");
                         JOptionPane.showMessageDialog(null, "Usuario invalido, Intente nuevamente");
                     }
                 }
-
+                /*capturas las excepciones que puedan ocurrir*/
             } catch (SQLException e) {
                 System.err.println("error al consultar el usuario: " + e);
             }
@@ -195,7 +205,7 @@ public class Login extends javax.swing.JFrame {
 
     private void btt_ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_ingresarActionPerformed
 
-        //ingresar con el metodo ingresar
+        //utiliza el metodo ingresar
         ingresar();
 
     }//GEN-LAST:event_btt_ingresarActionPerformed
@@ -228,10 +238,8 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Login().setVisible(true);
         });
     }
 

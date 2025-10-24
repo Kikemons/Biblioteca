@@ -21,12 +21,13 @@ import javax.swing.table.TableColumnModel;
  * @author monsalve
  */
 public class GestionarDatosAdmin extends javax.swing.JFrame {
-
+    //variables que se van a utilizar de manera local y entre interfaces
     private final DefaultTableModel model = new DefaultTableModel();
     private static String buscar = "Nombre";
     public static int id_libro = 0;
     public static String user="";
-
+    
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public GestionarDatosAdmin() {
         initComponents();
         setTitle("Biblioteca📚 - Gestionar Datos Usuarios tipo admin");
@@ -34,7 +35,8 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setSize(507, 516);
-
+        
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -43,15 +45,17 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
             jlabel_wallpaper.setIcon(Icono);
             this.repaint();
         }
-
+        
+        //se creo el scroll de la tabla
         JTable_consulta = new JTable(model);
         jScrollPane_consulta.setViewportView(JTable_consulta);
-
+        
+        //se definiron los titulos de las columnas
         model.addColumn("Usuario");
         model.addColumn("Estatus");
 
 
-        //agregamos accion al cmb_buscar
+        //se crea una consulta en la base de datos para llamar los usuariosAdmin que se tienen
         try {
 
             Connection cn = Conexion.conectar();
@@ -64,13 +68,13 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
                 }
                 model.addRow(fila);
             }
-
+            //se capatan las excepciones que se manejen en la consulta
         } catch (SQLException e) {
-            System.err.println("error al consultar los usuarios " + e);
+            JOptionPane.showMessageDialog(null,"error al consultar los usuarios ");
         }
         
         
-
+        //se realiza el metodo ppara selecionar el usuario en la tabla
         JTable_consulta.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e){
@@ -78,14 +82,13 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
             int columna=0;
             if(fila_point>-1){
                 user=(String)model.getValueAt(fila_point, columna);
-                System.out.println("user es: "+user);
             }
         }
         });
     }
     
    
-
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -167,15 +170,18 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //se abre un apartado donde puede agregar la informacion del nuevo usuario
     private void btt_agregarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_agregarLibroActionPerformed
         AgregarUsuarioAdmin aggUser = new AgregarUsuarioAdmin();
         aggUser.setVisible(true);
         dispose();
     }//GEN-LAST:event_btt_agregarLibroActionPerformed
 
+    // se elimina el usuario que se selecione en la base de datos
     private void btt_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_eliminarActionPerformed
-      int seleccion = JOptionPane.showConfirmDialog(null, "Esta seguro que desea borrar un libro");
+      
+        // se pregunta al usuario que confirme la eliminacion del usuario
+        int seleccion = JOptionPane.showConfirmDialog(null, "Esta seguro que desea borrar un Usuario");
         if (seleccion==0) {
             try {
             Connection cn= Conexion.conectar();
@@ -186,7 +192,6 @@ public class GestionarDatosAdmin extends javax.swing.JFrame {
              this.dispose();
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, "error al eliminar el usuario ");
-                System.err.println("error al eliminar libro "+e);
         }
         }
     }//GEN-LAST:event_btt_eliminarActionPerformed

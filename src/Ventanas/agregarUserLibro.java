@@ -369,11 +369,9 @@ public class agregarUserLibro extends javax.swing.JFrame {
                                     PreparedStatement pstt = cn2.prepareStatement("DELETE from prestamos where id_libro=?");
                                     pstt.setInt(1, id_libro);
                                     pstt.executeUpdate();
-                                    System.out.println("entrego el libro");
 
                                 } else {
                                     PreparedStatement psSession = cn2.prepareStatement("SET @UsuarioResponsable = ? ");
-                                    System.out.println("usuario "+Login.user);
                                     psSession.setString(1, Login.user);
                                     psSession.execute();
 
@@ -383,16 +381,14 @@ public class agregarUserLibro extends javax.swing.JFrame {
                                     pst2.setString(3, cmb_estado.getSelectedItem().toString());
                                     pst2.setString(4, cmb_estado.getSelectedItem().toString() + " " + txt_observaciones.getText().trim().toUpperCase());
                                     pst2.executeUpdate();
-                                    System.out.println("ingreso el libro");
 
                                 }
 
                             }
 
                         } catch (SQLException e) {
-                            /* creamos el mensaje de advertencia cuando se crea una excepcion o error al ingresar usuario en la base de datos */
-                            //OptionPane.showMessageDialog(null, "error al ingresar el usuario a la base de datos, contacte con el administrador!! ");
-                            System.err.println("Error " + e);
+                            // creamos el mensaje de advertencia cuando se crea una excepcion o error al ingresar usuario en la base de datos 
+                            JOptionPane.showMessageDialog(null, "error al ingresar el usuario a la base de datos, contacte con el administrador!! ");
                         }
                     } //hacemos el ingreso del nuevo usuario
                     else {
@@ -471,10 +467,10 @@ public class agregarUserLibro extends javax.swing.JFrame {
             String texto = JOptionPane.showInputDialog("Ingrese el numero de identidad del usuario");
 
             if (texto != null) {
-                Integer identificacion = Integer.valueOf(texto);
+               Long identificacion = Long.valueOf(texto);
                 Connection cn = Conexion.conectar();
                 PreparedStatement pst = cn.prepareStatement("select * from usuario where Identidad=?");
-                pst.setInt(1, identificacion);
+                pst.setLong(1, identificacion);
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
                     txt_Identidad.setText(rs.getString("Identidad"));

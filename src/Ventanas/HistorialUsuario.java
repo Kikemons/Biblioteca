@@ -7,12 +7,14 @@ import java.awt.Toolkit;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 public class HistorialUsuario extends javax.swing.JFrame {
-
+    
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public HistorialUsuario() {
         initComponents();
         setLocationRelativeTo(null);
@@ -21,6 +23,7 @@ public class HistorialUsuario extends javax.swing.JFrame {
         setResizable(false);
         setSize(1030, 481);
 
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = ClassLoader.getSystemResource("Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallapaper = new ImageIcon(url);
@@ -29,11 +32,13 @@ public class HistorialUsuario extends javax.swing.JFrame {
             jLabelWallpaper.setIcon(icon);
             this.repaint();
         }
-
+        
+        //se creo el scroll de la tabla
         DefaultTableModel model = new DefaultTableModel();
         jTable_historial = new JTable(model);
         jScrollPane_consulta.setViewportView(jTable_historial);
-
+        
+        //se definiron los titulos de las columnas
         model.addColumn("Id");
         model.addColumn("Nombre");
         model.addColumn("Apellido");
@@ -44,7 +49,8 @@ public class HistorialUsuario extends javax.swing.JFrame {
 
         TableColumnModel tabla = jTable_historial.getColumnModel();
         tabla.getColumn(0).setMaxWidth(50);
-        // Estableces la variable de sesión en MySQL
+        
+        // se hace la consulta de la tabla historial donde se implementan todas acciones que se realizan
 
         try {
             Connection cn = Conexion.conectar();
@@ -59,11 +65,12 @@ public class HistorialUsuario extends javax.swing.JFrame {
                 model.addRow(usuario);
             }
 
-        } catch (Exception e) {
-            System.err.println("eroor " + e);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "error al consultar la informacion de la tabla historial");
         }
     }
-
+     
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -148,10 +155,8 @@ public class HistorialUsuario extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HistorialUsuario().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new HistorialUsuario().setVisible(true);
         });
     }
 

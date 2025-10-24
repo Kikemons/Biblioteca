@@ -12,11 +12,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 public class AgregarUsuarioAdmin extends javax.swing.JFrame {
+//se crean las variables que se van a utilizar de manera global en esta pestaña
 
     boolean valido;
     Long telefono;
     Long identidad;
 
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public AgregarUsuarioAdmin() {
         initComponents();
         setTitle("Biblioteca📚 - Agregar usuario Admin");
@@ -26,6 +28,7 @@ public class AgregarUsuarioAdmin extends javax.swing.JFrame {
         setSize(713, 353);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
 
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -35,9 +38,8 @@ public class AgregarUsuarioAdmin extends javax.swing.JFrame {
             this.repaint();
         }
 
-
     }
-
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -61,14 +63,15 @@ public class AgregarUsuarioAdmin extends javax.swing.JFrame {
             txt_Password.setText("");
             valido = false;
         }
+        
+        //si la informacion no esta completa se pide llenar de nuevo los campos
         if (!valido) {
             JOptionPane.showMessageDialog(null, "complete todos los campos para poder"
                     + " registrar el usuario");
             txt_user.setBackground(Color.WHITE);
             txt_Password.setBackground(Color.WHITE);
         }
-        
-         
+
     }
 
     @SuppressWarnings("unchecked")
@@ -99,6 +102,7 @@ public class AgregarUsuarioAdmin extends javax.swing.JFrame {
         getContentPane().add(Jlabel_titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 390, 30));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Usuario:");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, -1, -1));
 
@@ -161,7 +165,7 @@ public class AgregarUsuarioAdmin extends javax.swing.JFrame {
                     ResultSet rs = pst.executeQuery();
 
                     //hacemos el ingreso del nuevo usuario
-                    if (rs.next()) {                        
+                    if (rs.next()) {
                         JOptionPane.showMessageDialog(null, "Error al registrar usuario Admin, el Usuario Ya se encuentra registrado");
                         txt_user.setText("");
                         cn.close();
@@ -169,8 +173,8 @@ public class AgregarUsuarioAdmin extends javax.swing.JFrame {
                         try {
                             // Establecer la variable de sesión
                             try (Connection c = Conexion.conectar() // Una sola conexión
-                            ) {
-                                
+                                    ) {
+
                                 // Insertar el usuario (esto activa el trigger)
                                 PreparedStatement pst2 = c.prepareStatement("INSERT INTO useradmin VALUES (?,?,?)");
                                 pst2.setString(1, txt_user.getText().trim());

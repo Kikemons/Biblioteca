@@ -11,14 +11,15 @@ import javax.swing.ImageIcon;
  * @author monsalve
  */
 public class Info extends javax.swing.JFrame {
-
+/*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public Info() {
         initComponents();
         setTitle("Biblioteca📚 - informacion");
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
-
+        
+         /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -28,7 +29,8 @@ public class Info extends javax.swing.JFrame {
             this.repaint();
         }
     }
-
+    
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -109,10 +111,8 @@ public class Info extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Info().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Info().setVisible(true);
         });
     }
 

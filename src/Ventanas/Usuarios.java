@@ -9,13 +9,16 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 public class Usuarios extends javax.swing.JFrame {
-    
+
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public static int idUsuario;
+
     public Usuarios() {
         initComponents();
         setLocationRelativeTo(null);
@@ -24,6 +27,7 @@ public class Usuarios extends javax.swing.JFrame {
         setResizable(false);
         setSize(1030, 481);
 
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = ClassLoader.getSystemResource("Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallapaper = new ImageIcon(url);
@@ -33,21 +37,24 @@ public class Usuarios extends javax.swing.JFrame {
             this.repaint();
         }
 
+        //se creo el scroll de la tabla
         DefaultTableModel model = new DefaultTableModel();
         JTable_historial = new JTable(model);
-        jScrollPane_consulta.setViewportView(JTable_historial);
-
+        jScrollPane_consulta.setViewportView(JTable_historial);      
+        
+        //se definiron los titulos de las columnas
         model.addColumn("Id");
         model.addColumn("Nombre");
         model.addColumn("Apellido");
         model.addColumn("Identidad");
         model.addColumn("Telefono");
         model.addColumn("Observación");
-
+        
+        //modifica el ancho de la columna 1
         TableColumnModel tabla = JTable_historial.getColumnModel();
         tabla.getColumn(0).setMaxWidth(50);
-        // Estableces la variable de sesión en MySQL
-
+        
+        /*se hace la consulta en la base de datos de los usuarios que se tienen registrados*/
         try {
             Connection cn = Conexion.conectar();
             PreparedStatement pst = cn.prepareStatement("select * from Usuario");
@@ -59,30 +66,27 @@ public class Usuarios extends javax.swing.JFrame {
                 }
                 model.addRow(usuario);
             }
-
+            //capta las excepciones que puedan ocurrir
         } catch (SQLException e) {
-            System.err.println("eroor " + e);
+            JOptionPane.showMessageDialog(null, "error al consultar la informacion");
         }
         
-        
+        //se creo el metodo para poder selecionar el usuario de la tabla con el clik del mouse
         JTable_historial.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e){
-            int fila=JTable_historial.rowAtPoint(e.getPoint());
-            int columna =0;
-            
-            if (fila>-1) {
-                idUsuario=(int)(model.getValueAt(fila, columna));
-                DatosUsuario datosUsuario= new DatosUsuario();
-                datosUsuario.setVisible(true);
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int fila = JTable_historial.rowAtPoint(e.getPoint());
+                int columna = 0;
+
+                if (fila > -1) {
+                    idUsuario = (int) (model.getValueAt(fila, columna));
+                    DatosUsuario datosUsuario = new DatosUsuario();
+                    datosUsuario.setVisible(true);
+                }
             }
-        }
         });
     }
-    
-  
-    
-
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -92,7 +96,6 @@ public class Usuarios extends javax.swing.JFrame {
         }
         return null;
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -156,11 +159,11 @@ public class Usuarios extends javax.swing.JFrame {
 
     private void btt_HistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_HistorialActionPerformed
         //redirigimos al apartado de el historial de usuarios
-       /*se crea un objeto de la ventana HistorialUsuario.java
+        /*se crea un objeto de la ventana HistorialUsuario.java
         y utilizamos el objeto para abrir la ventana historial
-        */
-       HistorialUsuario hu= new HistorialUsuario();
-       hu.setVisible(true);
+         */
+        HistorialUsuario hu = new HistorialUsuario();
+        hu.setVisible(true);
     }//GEN-LAST:event_btt_HistorialActionPerformed
 
     public static void main(String args[]) {
@@ -189,10 +192,8 @@ public class Usuarios extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Usuarios().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Usuarios().setVisible(true);
         });
     }
 

@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -15,6 +17,7 @@ public class AgregarLibro extends javax.swing.JFrame {
     public static int id_libro = 0;
     int cant;
 
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public AgregarLibro() {
         initComponents();
         setTitle("Biblioteca📚 - Agregar Libro");
@@ -24,6 +27,7 @@ public class AgregarLibro extends javax.swing.JFrame {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         id_libro = GestionarDatos.id_libro;
 
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -33,8 +37,19 @@ public class AgregarLibro extends javax.swing.JFrame {
             this.repaint();
         }
 
-    }
+              //se utiliza para no clickear sinno utilizar la tecla del teclado para ingresar
 
+        txt_cantidad.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btt_Guardar.doClick(); // Simula un clic en el botón
+                }
+            }
+        });
+
+    }
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -44,7 +59,7 @@ public class AgregarLibro extends javax.swing.JFrame {
         }
         return null;
     }
-
+    //se utiliza para limpiar los txt
     public void limpiar() {
         txt_autor.setBackground(Color.WHITE);
         txt_cantidad.setBackground(Color.WHITE);
@@ -110,6 +125,12 @@ public class AgregarLibro extends javax.swing.JFrame {
         getContentPane().add(jlabel_footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 430, -1, 23));
         getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 278, 36));
         getContentPane().add(txt_autor, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 278, 36));
+
+        txt_cantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_cantidadActionPerformed(evt);
+            }
+        });
         getContentPane().add(txt_cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 220, 278, 36));
 
         cmb_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin prestar", "Prestado" }));
@@ -135,43 +156,44 @@ public class AgregarLibro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //el metodo primcipal donde verifican los txt y se agrega la informaion a la base datos(Nuevo libro).
+    
     private void btt_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_GuardarActionPerformed
-        String autor, nombre, cantidad, categoria;
+        String autor, nombre, cantidad;
         autor = txt_autor.getText().trim();
         nombre = txt_nombre.getText().trim();
         cantidad = txt_cantidad.getText().trim();
-        boolean  valido = true;
+        boolean valido = true;
 
         if (autor.equals("")) {
             txt_autor.setBackground(Color.red);
-            valido=false;
+            valido = false;
         }
         if (nombre.equals("")) {
             txt_nombre.setBackground(Color.red);
-            valido=false;
+            valido = false;
         }
         if (cantidad.equals("")) {
             txt_cantidad.setBackground(Color.red);
-            valido=false;
+            valido = false;
         }
-        
+            //se verifica que se agregue un numero valido
         try {
-              cant=Integer.parseInt(cantidad);
+            cant = Integer.parseInt(cantidad);
         } catch (NumberFormatException e) {
-           txt_cantidad.setBackground(Color.red);
-            valido=false;
+            txt_cantidad.setBackground(Color.red);
+            valido = false;
         }
-        
 
         //validamos que el libro a ingresar no este ingresado
         try {
             try (Connection cn = Conexion.conectar()) {
-                if (valido ) {
+                if (valido) {
                     PreparedStatement pst = cn.prepareStatement("select Nombre from libro where nombre=?");
                     pst.setString(1, nombre);
                     ResultSet rs = pst.executeQuery();
-                    if (!rs.next()) {
-
+                    if (!rs.next()) {                       
+                        //se inserta el nuevo libro a la base de datos
                         try {
                             try (Connection cn2 = Conexion.conectar()) {
                                 PreparedStatement pst2 = cn2.prepareStatement("Insert into Libro values (?,?,?,?,?,?,?)");
@@ -185,12 +207,12 @@ public class AgregarLibro extends javax.swing.JFrame {
                                 pst2.executeUpdate();
                                 this.dispose();
                             }
-
+                            //se crean los mensajes de informacion para el usuario
                             JOptionPane.showMessageDialog(null, "El registro del Nuevo libro fue exitoso!!");
-
+                            
+                            //maneja las excepciones internas que puedan ocurrir
                         } catch (SQLException e) {
                             JOptionPane.showMessageDialog(null, "Error al guardar el nuevo libro!");
-                            System.err.println("error al agregar libro "+e);
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "El libro ya esta registrado!");
@@ -204,11 +226,15 @@ public class AgregarLibro extends javax.swing.JFrame {
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error a la hora de buscar el libro " );
+            JOptionPane.showMessageDialog(null, "Error a la hora de buscar el libro ");
         }
 
 
     }//GEN-LAST:event_btt_GuardarActionPerformed
+
+    private void txt_cantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cantidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_cantidadActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -250,10 +276,8 @@ public class AgregarLibro extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AgregarLibro().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new AgregarLibro().setVisible(true);
         });
     }
 

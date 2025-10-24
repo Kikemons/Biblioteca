@@ -12,20 +12,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 public class AgregarUsuario extends javax.swing.JFrame {
-
+    //se crean las variables que se van a utilizar de manera global en esta pestaña
     boolean valido;
     Long telefono;
     Long identidad;
 
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public AgregarUsuario() {
         initComponents();
         setTitle("Biblioteca📚 - Agregar usuario Admin");
         setLocationRelativeTo(null);
-
         setResizable(false);
         setSize(714, 519);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-
+        
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -43,7 +44,7 @@ public class AgregarUsuario extends javax.swing.JFrame {
         
 
     }
-
+     //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -53,7 +54,7 @@ public class AgregarUsuario extends javax.swing.JFrame {
         }
         return null;
     }
-
+    
     //metodo para que los textFile tengan informacion
     public void VerificarTextFile() {
         valido = true;
@@ -77,6 +78,8 @@ public class AgregarUsuario extends javax.swing.JFrame {
             txt_apellido.setText("");
             valido = false;
         }
+        
+        //si la informacion no esta completa se pide llenar de nuevo los campos
         if (!valido) {
             JOptionPane.showMessageDialog(null, "complete todos los campos para poder"
                     + " registrar el usuario");
@@ -86,6 +89,7 @@ public class AgregarUsuario extends javax.swing.JFrame {
             txt_Telefono.setBackground(Color.WHITE);
         }
         
+        // se la valida que los textos tengan informacion correcta
          try {
             identidad = Long.valueOf(txt_Identidad.getText());
             telefono = Long.valueOf(txt_Telefono.getText());
@@ -114,9 +118,9 @@ public class AgregarUsuario extends javax.swing.JFrame {
                 txt_Telefono.setText("");
                 valido = false;
             }
+                        
+                        //capta excepciones
         } catch (NumberFormatException e) {
-
-                System.err.println("error "+e);
                 JOptionPane.showMessageDialog(null, "Error al digitar, verifique los campos");
                 txt_Telefono.setText("");
                 txt_Identidad.setText("");
@@ -260,7 +264,7 @@ public class AgregarUsuario extends javax.swing.JFrame {
                                 pst2.setString(3, txt_apellido.getText().trim().toUpperCase());
                                 pst2.setLong(4, Long.parseLong(txt_Identidad.getText().trim()));
                                 pst2.setLong(5, Long.parseLong(txt_Telefono.getText().trim()));
-                                pst2.setString(6, "USUARIO CREADO, "+ txt_observaciones.getText().trim().toUpperCase());
+                                pst2.setString(6, "USUARIO CREADO "+ txt_observaciones.getText().trim().toUpperCase());
 
                                 pst2.executeUpdate();
                             }

@@ -10,11 +10,12 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-public class EliminarLibro extends javax.swing.JFrame {
-
-    private int id_libro;
+public final class EliminarLibro extends javax.swing.JFrame {
+    //variables que se van a utilizar de manera local y entre interfaces
+    private final int id_libro;
     public static String estadoLibro = "";
-
+    
+      /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public EliminarLibro() {
         initComponents();
         setTitle("Biblioteca📚 - Estado del Libro admin");
@@ -23,7 +24,8 @@ public class EliminarLibro extends javax.swing.JFrame {
         setSize(688, 491);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         id_libro = GestionarDatos.id_libro;
-
+        
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -36,7 +38,7 @@ public class EliminarLibro extends javax.swing.JFrame {
         consultarLibro();
 
     }
-
+    //se utilizo url para no generar errores al buscar la imagen de icono
     @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
@@ -47,6 +49,7 @@ public class EliminarLibro extends javax.swing.JFrame {
         return null;
     }
 
+    //se creo un metodo para limpiar los txt
     public void Limpiar() {
         txt_categoria.setBackground(Color.white);
         txt_cantidad.setBackground(Color.white);
@@ -57,7 +60,7 @@ public class EliminarLibro extends javax.swing.JFrame {
         txt_cantidad.setText("");
 
     }
-
+    //Se creo un metodo para consultar los datos del libro selecionado
     public void consultarLibro() {
         try {
             try (Connection cn = Conexion.conectar()) {
@@ -70,14 +73,13 @@ public class EliminarLibro extends javax.swing.JFrame {
                     txt_cantidad.setText(rs.getString("Ejemplares"));
                     txt_id.setText(rs.getString("id"));
                     txt_categoria.setText(rs.getString("Categoria"));
-                    System.out.println("estado "+rs.getString("Estado"));
                     cmb_estado.setSelectedItem(rs.getString("Estado"));
                     estadoLibro = rs.getString("Estado");
                     cn.close();
                 }
             }
         } catch (SQLException e) {
-            System.err.println("error a la hora de consultar los datos del libro: " + e);
+            JOptionPane.showMessageDialog(null,"error a la hora de consultar los datos del libro ");
         }
     }
 
@@ -184,10 +186,11 @@ public class EliminarLibro extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //este boton elimina el libro
     private void btt_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_eliminarActionPerformed
         int seleccion = JOptionPane.showConfirmDialog(null, "Esta seguro que desea borrar un libro");
-
+        /*se hace la peticion de confirmacion al usuario para eliminar un libro
+        (solo pueden eliminar libro un usuario con estatus de administrador)*/
         if (seleccion == 0) {
             try {
                 try (Connection cn2 = Conexion.conectar()) {
@@ -205,7 +208,7 @@ public class EliminarLibro extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btt_eliminarActionPerformed
-
+    //este boton actualizar los datos del libro(de prestado a no prestado)
     private void btt_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_actualizarActionPerformed
         //hacemos un metodo para direccionar a una nueva interfaz si se intenta cambiar el estado del libro          
 

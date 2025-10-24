@@ -11,7 +11,8 @@ import javax.swing.ImageIcon;
  * @author monsalve
  */
 public class menuUser extends javax.swing.JFrame {
-
+    
+    /*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public menuUser() {
         initComponents();
         //colocamos algunos valores para darle personalizacion a la ventana
@@ -118,17 +119,19 @@ public class menuUser extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //Este boton redirecciona al usuario al apartado de agreagar usuarios lectores
     private void btt_consultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_consultaActionPerformed
         AgregarUsuario agg = new AgregarUsuario();
         agg.setVisible(true);
     }//GEN-LAST:event_btt_consultaActionPerformed
-
+    
+     /*Este boton redirecciona al usuario al apartado de informacion del software (creditos)*/
     private void btt_infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_infoActionPerformed
         Info info = new Info();
         info.setVisible(true);
     }//GEN-LAST:event_btt_infoActionPerformed
-
+    
+    //Este boton redirecciona al usuario al apartado de buscar libro 
     private void btt_librosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btt_librosActionPerformed
         BuscarLibro buscarLibro = new BuscarLibro();
         buscarLibro.setVisible(true);
@@ -165,10 +168,8 @@ public class menuUser extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new menuUser().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new menuUser().setVisible(true);
         });
     }
 

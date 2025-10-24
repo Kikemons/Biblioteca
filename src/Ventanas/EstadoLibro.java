@@ -10,10 +10,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class EstadoLibro extends javax.swing.JFrame {
-
+    //variables que se van a utilizar de manera local y entre interfaces
     public static int id_libro = 0;
     public static String estadoLibro;
-
+/*se les da personalizacion a algunos de los componentes principales del Jframe*/
     public EstadoLibro() {
         initComponents();
         setTitle("Biblioteca📚 - Estado del Libro");
@@ -22,7 +22,8 @@ public class EstadoLibro extends javax.swing.JFrame {
         setSize(688, 491);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         id_libro = BuscarLibro.id_libro;
-
+        
+        /* se categrizan las url donde se maneja los logos y imagenes con las cuales se les da el diseño al Jframe */
         URL url = getClass().getResource("/Imagenes/fondo.jpg");
         if (url != null) {
             ImageIcon wallpaper = new ImageIcon(url);
@@ -31,6 +32,8 @@ public class EstadoLibro extends javax.swing.JFrame {
             jLabel_wallpaper.setIcon(fondo);
             this.repaint();
         }
+        
+        //se hace una consulta donde se llenan los txt con informacion del libro
 
         try {
             try (Connection cn = Conexion.conectar()) {
@@ -49,16 +52,15 @@ public class EstadoLibro extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Error al consultar el libro ");
                 }
-
-                cn.close();
             }
+            //se capturan las excepciones
 
         } catch (SQLException e) {
-            System.err.println("error a la hora de consultar los datos del libro: " + e);
+            JOptionPane.showMessageDialog(null, "error a la hora de consultar los datos del libro ");
         }
 
     }
-
+//se utilizo url para no generar errores al buscar la imagen de icono
       @Override
     public Image getIconImage() {
         URL url = ClassLoader.getSystemResource("Imagenes/icon.png");
